@@ -1,0 +1,1505 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>花花餐旅 V20｜沉浸式餐旅永續教育｜四關互動遊戲</title><style>
+*{box-sizing:border-box}body{margin:0;background:#eef5eb;color:#263d34;font-family:'Microsoft JhengHei',system-ui,sans-serif}header{background:linear-gradient(110deg,#255a4b,#73a55e);color:white;text-align:center;padding:13px}header h1{font-size:clamp(20px,3vw,29px);margin:0}header p{margin:5px 0;font-size:14px}main{max-width:1440px;margin:12px auto;padding:0 12px;display:grid;grid-template-columns:minmax(0,1fr) 315px;gap:12px}.stage{position:relative;min-height:560px;border-radius:17px;overflow:hidden;background:#b8d5c5;box-shadow:0 4px 18px #0002}#view{display:block;width:100%;height:560px}.hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none}.chip{background:#173e35df;color:white;border-radius:30px;padding:9px 14px;font-weight:bold;font-size:14px}.cross{position:absolute;bottom:12px;left:12px;color:#fff;background:#183d36b8;border-radius:10px;padding:9px;font-size:13px}aside{background:white;border-radius:16px;padding:17px;box-shadow:0 4px 18px #0001}h2{margin:5px 0 12px;color:#2c6c4c;font-size:21px}h3{margin:8px 0}p{line-height:1.55}.muted{color:#66786c;font-size:13px}.meter{height:12px;background:#dce7dc;border-radius:12px;overflow:hidden}.meter>div{height:100%;width:0;background:#70a95b;transition:width .3s}.stat{background:#eef7e9;padding:11px;border-radius:10px;margin:9px 0}button{background:#407e57;border:0;border-radius:10px;color:white;padding:11px 15px;cursor:pointer;font-size:15px;font-weight:700}button:hover{background:#2c6444}button:disabled{background:#a4afa8;cursor:not-allowed}.buttons{display:flex;flex-wrap:wrap;gap:7px;margin:12px 0}.buttons button{flex:1}.secondary{background:#34546a}.overlay{position:absolute;inset:0;background:#163d34dd;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}.dialog{width:min(750px,100%);max-height:100%;overflow-y:auto;background:#fffdf7;border-radius:19px;padding:22px;box-shadow:0 8px 40px #0004;text-align:center}.dialog h2{font-size:25px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:16px 0}.card{background:#f0f6e9;border:2px solid #d8e8d3;border-radius:13px;padding:12px;text-align:left}.card strong{display:block;margin-bottom:6px}.card p{font-size:13px;min-height:40px;margin:5px 0}.card button{width:100%}.choice{display:block;width:100%;text-align:left;margin:8px 0;background:#e7f0e7;color:#264d39;border:2px solid #c8dfc7}.choice:hover{background:#d4e7d3}.badge{background:#fff0c4;border:2px solid #dcb65c;border-radius:14px;padding:12px;margin-top:10px}.hidden{display:none!important}#toast{font-weight:bold;min-height:58px}.progressitem{font-size:13px;padding:5px 0}.progressitem.done{color:#267c46}.touch{display:none;position:absolute;bottom:55px;right:12px;gap:4px;grid-template-columns:repeat(3,45px)}.touch button{padding:8px 0;background:#2b6656c9}.touch .blank{visibility:hidden}@media(max-width:900px){main{grid-template-columns:1fr}.stage{min-height:450px}#view{height:450px}.touch{display:grid}}@media(max-width:530px){.cards{grid-template-columns:1fr}.stage{min-height:390px}#view{height:390px}.dialog{padding:13px}.hud .chip{font-size:12px;padding:7px}}
+#mobileAction{display:none;position:absolute;right:12px;bottom:216px;z-index:5;background:#ef9944;color:#203c2d;border:3px solid #fff8dc;box-shadow:0 5px 15px #0005;border-radius:22px;font-size:16px;padding:14px 18px;touch-action:manipulation}.touch{z-index:5;touch-action:none}.touch button{touch-action:none}@media(max-width:900px){#mobileAction{display:block}.cross{bottom:8px;left:8px;right:8px;font-size:11px;text-align:center;padding:5px}.touch{bottom:43px;right:12px}}@media(max-width:530px){#mobileAction{bottom:204px;right:12px;padding:12px 15px}}
+
+.mini-head{background:#f0f7ec;border-radius:12px;padding:10px;margin:10px 0}.mini-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.mini-tile{background:#f5efe2;color:#31483a;border:2px solid #d9dfcc;min-height:65px}.mini-tile:disabled{background:#d9e7d4;color:#39734e;opacity:1}.mini-tile.selected{background:#d9f2dc;border-color:#388754}.mini-feedback{font-weight:700;min-height:32px;color:#aa512d}.mini-primary{background:#347956;margin-top:8px}.mini-meter{width:100%;accent-color:#3e855a}.mini-progress{font-size:13px;color:#56765c;margin-top:8px}.mini-hint{font-size:13px;color:#5c7266}.mini-number{font-size:30px;font-weight:bold;color:#28764c}.mini-stage{background:#f5f8ed;border-radius:14px;padding:14px;margin:12px 0}.mini-sticker{font-size:32px}.mini-back{margin-top:10px}
+/* Keep dialog controls visible even on short desktop/mobile screens. */
+.overlay{align-items:flex-start;overscroll-behavior:contain}
+.dialog{max-height:calc(100% - 2px);overflow-y:auto;overscroll-behavior:contain;margin:auto 0}
+#recycleGame .mini-grid{gap:8px}
+#recycleGame .mini-tile{min-height:52px}
+#recycleGame .mini-stage{padding:12px;margin:8px 0}
+@media(max-height:650px){.dialog{padding:12px}.dialog h2{font-size:20px;margin:2px 0 6px}.dialog p{margin:6px 0}}
+
+/* V19: real-life reference photo gallery within each educational task */
+.real-photo{margin:13px 0 16px;border:1px solid #d7e6d8;border-radius:16px;overflow:hidden;background:#f4faf4;box-shadow:0 4px 12px #214c3220}
+.real-photo img{display:block;width:100%;height:clamp(145px,23vh,245px);object-fit:cover;background:#e2eee6}
+.real-photo .photo-caption{padding:10px 13px;font-size:14px;line-height:1.55;color:#315b43}
+.real-photo .photo-caption strong{display:block;color:#245b40;margin-bottom:3px}
+.real-photo .photo-fallback{display:none;padding:24px 15px;text-align:center;background:#e9f2e9;color:#476750}
+.real-photo .photo-fallback .symbol{font-size:40px;display:block;margin-bottom:5px}
+.real-photo .photo-tip{padding:7px 13px;background:#e6f2e9;font-size:12px;color:#52705b}
+@media(max-width:600px){.real-photo img{height:160px}.real-photo .photo-caption{font-size:13px}}
+
+/* V20: immersive educational task panel, accessible and responsive */
+:root{--v20green:#27694c;--v20cream:#fff9ed}
+header{background:linear-gradient(110deg,#194d40,#428b63 56%,#94b66d);border-bottom:5px solid #f0bd70}
+.stage{border:3px solid #d9e8cc;box-shadow:0 10px 32px #204b3030}
+aside{border-top:5px solid #75ad7d}
+.dialog{width:min(880px,100%);background:linear-gradient(145deg,#fffefa,#f1f8ef)}
+#recycleGame .mini-stage{background:transparent;padding:0}
+.lesson-hero{display:flex;gap:10px;align-items:center;justify-content:space-between;background:linear-gradient(110deg,#e6f5e8,#fff4d8);padding:11px 14px;border-radius:14px;margin-bottom:10px;text-align:left}
+.lesson-step{font-weight:900;color:#205b40}.lesson-counter{font-size:13px;color:#587463}
+.lesson-progress{height:10px;background:#d5e6d8;border-radius:20px;overflow:hidden}.lesson-progress>div{height:100%;background:linear-gradient(90deg,#3d966d,#e3b35e);transition:width .25s}
+.lesson-layout{display:grid;grid-template-columns:minmax(0,0.92fr) minmax(0,1.08fr);gap:14px;align-items:start;margin-top:12px}
+.lesson-visual{position:relative}.lesson-visual .real-photo{margin:0}.lesson-visual .real-photo img{height:210px}
+.lesson-visual .photo-tip{font-size:11px}.lesson-visual .photo-caption{font-size:12px;padding:8px}
+.observe-note{padding:10px 12px;margin-top:9px;border-radius:12px;background:#e7f3eb;border-left:4px solid #5a9a72;color:#2d5b46;font-size:13px;line-height:1.55;text-align:left}
+.lesson-decision{background:white;border:1px solid #e0e9d9;border-radius:14px;padding:13px;text-align:left;box-shadow:0 4px 12px #173a2410}
+.lesson-decision h3{font-size:18px;line-height:1.5;margin:3px 0 12px}
+#recycleGame .mini-grid{grid-template-columns:1fr;margin:8px 0}
+#recycleGame .mini-tile{min-height:52px;text-align:left;padding:11px 13px;background:#f5f8f0;border:2px solid #d9e5d7;transition:transform .1s,background .15s}
+#recycleGame .mini-tile:not(:disabled):hover{background:#e1f1e5;transform:translateY(-1px)}
+#recycleGame .mini-tile:focus-visible{outline:3px solid #f1ad4b;outline-offset:2px}
+.lesson-feedback{background:#f0f8ee;border-radius:12px;padding:13px;line-height:1.7;margin-top:12px;text-align:left}
+.lesson-feedback:empty{display:none}
+.lesson-actions button{width:100%;min-height:52px;font-size:17px;background:#267950}
+.lesson-actions button:hover{background:#1c6241}
+.lesson-result{padding:16px;border-radius:16px;background:linear-gradient(130deg,#e6f4e4,#fff0ce);text-align:center}
+.lesson-result strong{color:#226747}
+.lesson-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.lesson-tags span{font-size:12px;padding:5px 9px;border-radius:18px;background:#e4f1e8;color:#27684b}
+@media(max-width:680px){.lesson-layout{grid-template-columns:1fr}.lesson-visual .real-photo img{height:135px}.lesson-visual .real-photo .photo-caption{padding:6px 9px}.lesson-visual .photo-tip{display:none}.observe-note{padding:7px 9px;margin-top:5px}.lesson-decision{padding:10px}.dialog{padding:12px}.lesson-decision h3{font-size:16px}}
+.scenario-artwork{height:210px;background:linear-gradient(145deg,#e0f1e4,#e6f1ff);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}.scenario-emoji{font-size:108px;filter:drop-shadow(0 9px 8px #305a4228);z-index:1}.scenario-lines{position:absolute;inset:0;opacity:.4}.scenario-lines span{position:absolute;display:block;border:3px solid #7eae9b;border-radius:50%;width:220px;height:220px;top:-100px;right:-50px}.scenario-lines span:nth-child(2){width:140px;height:140px;top:auto;right:auto;bottom:-65px;left:-35px}.scenario-lines span:nth-child(3){width:70px;height:70px;top:20px;left:25px}@media(max-width:680px){.scenario-artwork{height:135px}.scenario-emoji{font-size:75px}}
+
+/* V22: explicit illustrated objects and visual clues for every single question */
+.exact-scene-stage{padding:12px;background:linear-gradient(145deg,#e5f3e8,#e8f2fc);min-height:225px;box-sizing:border-box;display:flex;flex-direction:column;gap:12px}
+.exact-scene-title{font-weight:900;font-size:15px;color:#225e43;text-align:center;line-height:1.4}
+.exact-scene-objects{display:flex;align-items:stretch;justify-content:center;gap:8px;flex:1}
+.exact-scene-item{width:43%;min-height:150px;background:#fff;border:2px solid #c4e0cf;border-radius:15px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px;box-sizing:border-box;box-shadow:0 5px 14px #254c3920}
+.exact-scene-target{background:#fff9e9;border-color:#ead49a}
+.exact-scene-item strong{font-size:13px;line-height:1.4;text-align:center;color:#28543e}
+.exact-scene-emoji{font-size:60px;line-height:1.1}
+.exact-scene-arrow{align-self:center;font-size:24px;color:#528b6c;font-weight:900}
+@media(max-width:680px){.exact-scene-stage{min-height:170px;padding:8px;gap:6px}.exact-scene-item{min-height:112px}.exact-scene-emoji{font-size:42px}.exact-scene-title{font-size:13px}.exact-scene-item strong{font-size:11px}}
+/* V24 detailed per-question storybook illustrations */
+.cute-scene-stage{padding:9px;background:linear-gradient(135deg,#ffefda,#e7f7eb);border-radius:17px 17px 0 0}
+.cute-lesson-svg{display:block;width:100%;height:auto;max-height:310px;filter:drop-shadow(0 7px 12px #8eaa8b40)}
+.cute-scene{border-radius:18px;overflow:hidden;border:2px solid #e7d4b9;box-shadow:0 8px 18px #8a9f8c24}
+@media(max-width:680px){.cute-lesson-svg{max-height:190px}.cute-scene-stage{padding:5px}}
+<style>.care-lesson{display:grid;grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr);gap:16px;align-items:start;text-align:left}.care-visual{min-height:310px;border-radius:20px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;background:radial-gradient(circle at 80% 10%,#fff4c4,transparent 42%),linear-gradient(140deg,#e6f6e9,#ffe8e0);border:3px solid #e2d2a6;box-shadow:inset 0 -15px 0 #ffffff55}.care-visual-icon{font-size:95px;filter:drop-shadow(0 9px 7px #5c6c5a35)}.care-visual strong{font-size:21px;color:#356c52}.care-visual p{line-height:1.65}.care-content h2{font-size:21px;line-height:1.5}.care-kicker{font-weight:800;color:#438163}.care-feedback{color:#286c4c;line-height:1.6;background:#edf7e9;padding:10px;border-radius:10px}.care-feedback:empty{display:none}@media(max-width:680px){.care-lesson{grid-template-columns:1fr}.care-visual{min-height:130px;padding:10px}.care-visual-icon{font-size:45px}.care-visual p{margin:5px}.care-content h2{font-size:17px}}</style><style>.care-visual{padding:12px;min-height:300px}.care-scene-label{font-weight:800;color:#498367;margin-bottom:5px}.care-scene-svg{width:100%;max-width:460px;height:auto;display:block;border-radius:16px;box-shadow:0 5px 18px #5c78642a}.care-scene-heading{font-size:18px;margin:9px 0 0;color:#356c52}@media(max-width:680px){.care-visual{min-height:0}.care-scene-svg{max-height:190px}}</style><style id="v31-side-by-side">
+/* V31: left visual and right question in a stable two-column lesson. */
+.dialog:has(.care-lesson){width:min(1080px,100%);max-width:none;box-sizing:border-box;padding:clamp(10px,2vw,22px)}
+.care-lesson{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:start;gap:clamp(10px,2vw,24px)!important;width:100%;text-align:left}
+.care-lesson>.care-visual,.care-lesson>.care-content{min-width:0;width:100%;box-sizing:border-box}
+.care-lesson>.care-visual{position:sticky;top:0;padding:12px;min-height:0}
+.care-lesson .care-scene-svg{width:100%;max-width:none;max-height:none;height:auto}
+.care-lesson .care-content h2{font-size:clamp(16px,2vw,23px);line-height:1.45}
+.care-lesson .care-content .choice{display:block;width:100%;white-space:normal;text-align:left;line-height:1.5;min-height:48px}
+@media(max-width:680px){.care-lesson{grid-template-columns:minmax(0,0.95fr) minmax(0,1.05fr)!important;gap:8px!important}.care-lesson>.care-visual{padding:5px}.care-lesson .care-scene-heading{font-size:13px}.care-lesson .care-scene-label{font-size:12px}.care-lesson .care-visual p{font-size:12px;line-height:1.35}.care-lesson .care-kicker{font-size:12px}.care-lesson .care-content h2{font-size:15px}.care-lesson .care-content .choice{font-size:13px;padding:8px 6px}.dialog:has(.care-lesson){padding:8px}}
+@media(max-width:400px){.care-lesson{grid-template-columns:minmax(0,0.9fr) minmax(0,1.1fr)!important}.care-lesson .care-content .choice{font-size:12px}.care-lesson .care-visual p{font-size:11px}}
+</style></head><body><header><h1>🌱 花花餐旅 3D 永續創新實驗室</h1><p>四關整合版｜綠色採購 × 惜食廚房 × 餐旅資源循環 × 友善共融｜繽紛童話3D教育遊戲</p></header><main><section class="stage"><canvas id="view"></canvas><div class="hud"><span class="chip" id="sceneTitle">四大實驗室</span><span class="chip" id="topScore">總分 0</span></div><div class="cross">第三人稱街道視角 · WASD／方向鍵移動 · 靠近發光物件，點擊「執行任務」</div><button id="mobileAction" type="button">✨ 執行任務</button><div class="touch"><span class="blank"></span><button data-key="w">▲</button><span class="blank"></span><button data-key="a">◀</button><button data-key="s">▼</button><button data-key="d">▶</button></div><div id="overlay" class="overlay"><div class="dialog" id="modal"></div></div></section><aside><h2>🎮 任務控制台</h2><div class="stat"><strong id="sideTitle">尚未選擇關卡</strong><p class="muted" id="mission">先從第一關開始挑戰。</p></div><div class="stat">本關得分：<strong id="score">0</strong> / <strong id="maxScore">300</strong><br>完成任務：<strong id="progressText">0 / 3</strong><div class="meter"><div id="meterFill"></div></div></div><div id="tasks"></div><p class="muted" id="assetStatus"></p><p id="toast">請選擇關卡開始。</p><div class="buttons"><button id="action">✨ 執行任務</button><button id="menu" class="secondary">關卡選單</button></div><p class="muted">第二關有三種惜食互動；第三關與第四關各有六項情境教育任務。靠近任務點再按執行任務，答錯可重試、不扣分。</p><div class="badge hidden" id="badge"></div></aside></main>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+const $=id=>document.getElementById(id),canvas=$('view'),renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.25;
+const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(55,1,.1,120),hemi=new THREE.HemisphereLight(0xffffff,0x68836d,2.1),sun=new THREE.DirectionalLight(0xffffff,2.3);scene.add(hemi,sun);sun.position.set(-7,15,9);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=-18;sun.shadow.camera.right=18;sun.shadow.camera.top=18;sun.shadow.camera.bottom=-18;sun.shadow.bias=-0.00015;
+const levels=[
+{name:'綠色採購市集',icon:'🥕',intro:'走訪小農攤位，選擇更友善環境的採購方式。',badge:'在地採購達人',color:0xbde1eb,tasks:[{name:'選購在地蔬果',pos:[-5,2],question:'餐廳今天需要番茄，哪一種採購方式較符合永續原則？',options:['優先選擇當季、來源清楚的在地番茄','只看外觀，越遠進口越好','不考慮需求，大量囤貨'],correct:0,why:'當季在地採購有機會減少運輸負擔，也能支持在地生產。'},{name:'適量採購',pos:[5,-3],question:'市場有特價蔬菜，餐廳應該怎麼買？',options:['不管需求先買十倍','依菜單和預估用量採購','把還能吃的舊食材先丟掉'],correct:1,why:'依需求採購能降低庫存損耗與食物浪費。'},{name:'減少一次性包裝',pos:[3,5],question:'採購時如何減少一次性垃圾？',options:['每樣蔬菜分裝塑膠袋','使用可重複利用的購物籃','要求額外多層包裝'],correct:1,why:'重複使用容器能減少一次性包材。'}]},
+{name:'惜食永續廚房',icon:'🍲',intro:'進入有冰箱、爐具與備餐台的廚房，實踐惜食。',badge:'惜食料理高手',color:0xd2e0e5,tasks:[{name:'正確保存食材',pos:[6,-5],question:'新進貨的易腐食材，應如何處理？',options:['依保存需求盡快冷藏並標示日期','先放室溫好幾天','把新貨蓋在舊貨上且不標示'],correct:0,why:'妥善冷藏、標示日期與先進先出有助減少食材損耗。'},{name:'適量備餐',pos:[0,0],question:'客人食量較小，怎麼提供更友善的服務？',options:['所有人都必須吃同樣份量','提供適量或可選份量','不詢問就強迫加菜'],correct:1,why:'尊重食量差異，提供合適份量，能兼顧服務與惜食。'},{name:'廚餘分類',pos:[-6,3],question:'備餐產生的可堆肥蔬果殘渣應怎麼處理？',options:['與塑膠包裝混在一起','依場域規範分類並妥善處理','直接丟進水槽'],correct:1,why:'正確分類可協助後續資源化處理；實際做法應遵循當地規範。'}]},
+{name:'餐旅資源循環實驗室',icon:'♻️',intro:'從餐廳後場出發，練習分類、前處理、設備安全、包裝循環、節能與減廢。',badge:'餐旅循環實踐家',color:0xc7dce5,tasks:[{name:'餐廳分類偵探',pos:[-6, 1],question:'完成互動挑戰',options:['完成'],correct:0,why:'透過實際操作理解資源分類、再利用與節能。'},{name:'回收前處理實驗',pos:[0, 1],question:'完成互動挑戰',options:['完成'],correct:0,why:'透過實際操作理解資源分類、再利用與節能。'},{name:'餐旅設備安全決策',pos:[6, 1],question:'完成互動挑戰',options:['完成'],correct:0,why:'透過實際操作理解資源分類、再利用與節能。'},{name:'包裝循環再利用',pos:[-6, -5],question:'完成互動挑戰',options:['完成'],correct:0,why:'透過實際操作理解資源分類、再利用與節能。'},{name:'餐廳節能決策',pos:[0, -5],question:'完成互動挑戰',options:['完成'],correct:0,why:'透過實際操作理解資源分類、再利用與節能。'},{name:'永續餐廳實踐',pos:[6, -5],question:'完成互動挑戰',options:['完成'],correct:0,why:'透過實際操作理解資源分類、再利用與節能。'}]},
+{name:'友善共融餐廳',icon:'💚',intro:'在長者友善餐廳，練習尊重自主、無障礙與溫暖服務。',badge:'友善服務守護者',color:0xe7ded1,tasks:[{name:'保持通道暢通',pos:[6,3],question:'輪椅使用者準備前往餐桌，通道上有雜物，應怎麼做？',options:['先移開障礙物並確認通道安全','要求對方自行跨過障礙','不理會，繼續擺設'],correct:0,why:'無障礙動線讓每個人都能安全、便利地使用空間。'},{name:'尊重長者選擇',pos:[-5,-2],question:'長者看菜單較吃力，服務人員應怎麼做？',options:['直接替長者決定餐點','先詢問是否需要大字菜單或協助','大聲催促長者快點選'],correct:1,why:'先詢問需求、提供選項，才能兼顧協助與自主權。'},{name:'陪伴與同理',pos:[2,-3],question:'長者行動較慢，準備入座，最合適的方式是？',options:['不問就拉著對方坐下','抱怨動作太慢','詢問是否需要協助，依其意願提供支持'],correct:2,why:'友善服務重視耐心、尊重與當事人的意願。'},{name:'友善溝通',pos:[-7,5],question:'聽力較弱的顧客希望了解今日套餐，服務人員應如何溝通？',options:['背對顧客快速說明','面向顧客、清楚說話，必要時提供文字資訊','只向同行家屬說明，不詢問本人'],correct:1,why:'先確認顧客偏好的溝通方式，面對面清楚表達，並尊重顧客本人。'},{name:'飲食需求尊重',pos:[6,-5],question:'顧客告知有食物過敏，最適合的處理方式是？',options:['覺得少量沒關係，照常出餐','確認過敏原與餐點成分，和廚房核對並清楚告知','直接拒絕提供任何服務'],correct:1,why:'過敏資訊應認真確認、與廚房溝通，不能在無法保證安全時隨意承諾。'},{name:'世代共融餐桌',pos:[0,6],question:'長者與孩童一起參加餐廳活動，如何安排比較友善？',options:['只安排一種難度，跟不上就退出','安排可選擇的參與方式、清楚說明並尊重個人意願','要求長者必須協助照顧全部孩童'],correct:1,why:'共融活動應兼顧不同年齡的能力、意願與安全，避免刻板印象或強迫參與。'}]}
+];
+const M=c=>new THREE.MeshStandardMaterial({color:c,roughness:.77}),colors={wood:M(0x98714d),dark:M(0x6e4d32),white:M(0xf4eee0),steel:M(0x9aaeb1),green:M(0x4f9a65),red:M(0xd95e50),gold:M(0xf3c95d),blue:M(0x5496c0),gray:M(0x5c7176),skin:M(0xe8bd96),black:M(0x38413d),soil:M(0x8e6444)};
+function cube(x,y,z,w,h,d,m,parent=scene){const o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}function ball(x,y,z,r,m,parent=scene){const o=new THREE.Mesh(new THREE.SphereGeometry(r,14,12),m);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}function cylinder(x,y,z,r,h,m,parent=scene){const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,16),m);o.position.set(x,y,z);o.castShadow=true;parent.add(o);return o}function label(txt,x,y,z,scale=2.6){const c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');g.fillStyle='#fffaf0';g.fillRect(0,0,512,128);g.fillStyle='#285947';g.font='bold 47px Microsoft JhengHei';g.textAlign='center';g.fillText(txt,256,80);const t=new THREE.CanvasTexture(c),o=new THREE.Mesh(new THREE.PlaneGeometry(scale,scale/4),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}));o.position.set(x,y,z);scene.add(o)}
+function human(x,z,shirt=colors.blue,old=false){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);cylinder(0,.85,0,.32,.8,shirt,g);ball(0,1.48,0,.28,colors.skin,g);ball(0,1.72,-.03,.27,old?M(0xb6b4af):colors.black,g);for(const a of [-.16,.16])cube(a,.26,0,.14,.52,.15,colors.dark,g);return g}
+function tree(x,z){cylinder(x,.7,z,.17,1.4,colors.wood);ball(x,1.7,z,.72,colors.green)}function taskMarker(x,z,i){
+ const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ if(level!==0){ball(0,.8,0,.32,[colors.gold,colors.green,colors.blue][i],g);const ring=new THREE.Mesh(new THREE.TorusGeometry(.55,.055,8,24),new THREE.MeshBasicMaterial({color:0xffe7a0}));ring.rotation.x=Math.PI/2;ring.position.y=.24;g.add(ring);label('任務 '+(i+1),x,1.75,z,1.5);return g}
+  const gold=new THREE.MeshStandardMaterial({color:0xffd56b,emissive:0xa36b1d,emissiveIntensity:.34,metalness:.2,roughness:.32});
+  const post=M(0x765b41);
+  cylinder(0,.36,0,.055,.72,post,g);
+  const starShape=new THREE.Shape();
+  for(let k=0;k<10;k++){const a=k*Math.PI/5-Math.PI/2,r=k%2===0?.31:.14;const xx=Math.cos(a)*r,yy=Math.sin(a)*r;k===0?starShape.moveTo(xx,yy):starShape.lineTo(xx,yy)}starShape.closePath();
+  const mesh=new THREE.Mesh(new THREE.ExtrudeGeometry(starShape,{depth:.075,bevelEnabled:true,bevelThickness:.035,bevelSize:.025,bevelSegments:2}),gold);
+  mesh.position.set(0,1.0,0);g.add(mesh);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.41,.025,8,36),new THREE.MeshBasicMaterial({color:0xffe5a0,transparent:true,opacity:.65}));ring.rotation.x=Math.PI/2;ring.position.y=.10;g.add(ring);
+  g.userData.star=mesh;
+  return g;
+}
+function base(bg,floor){scene.background=new THREE.Color(bg);scene.fog=new THREE.Fog(bg,24,48);cube(0,-.25,0,23,.5,23,M(floor))}
+function market(){base(0xb8dfee,0x91bc7e);for(let j=0;j<4;j++){cube(-7+j*2.2,.05,-5,1.6,.13,5,colors.soil);for(let k=0;k<5;k++){ball(-7+j*2.2,.25,-7+k, .23,j%2?colors.green:colors.red)}}for(const x of [-5,4]){cube(x,.95,-1,4,.2,2,colors.wood);for(const dx of [-1.7,1.7])for(const z of [-1.8,-.2])cube(x+dx,1.8,z,.12,3.6,.12,colors.dark);cube(x,3.2,-1,4.6,.2,2.7,colors.gold);for(let k=0;k<5;k++)cube(x-1.8+k*.9,3.27,-1,.45,.1,2.7,k%2?colors.white:colors.red);for(let k=0;k<3;k++)ball(x-1+k,1.28,-1,.29,k%2?colors.green:colors.red)}for(let i=0;i<4;i++){cube(4+i*.95,.38,-6, .8,.7,.8,colors.wood);ball(4+i*.95,.85,-6,.25,colors.green)}human(-7,1,colors.gold);tree(-9,6);tree(9,7);label('在地小農市集',0,3.7,-10,5)}
+function kitchen(){base(0xc5dbe3,0xd5d6ce);cube(0,2,-10,23,4,.25,colors.white);for(let x=-10;x<11;x+=2)for(let y=.5;y<4;y+=1)cube(x,y,-9.84,1.9,.05,.05,M(0xc8d7d7));cube(-5,.85,-5,6,1.7,2,colors.steel);cube(-5,1.75,-5,6,.15,2,colors.white);cube(5,1.7,-6,2.4,3.4,1.8,M(0xb6d4da));cube(5.85,1.8,-5.03,.08,1.2,.08,colors.gray);cube(0,.75,-7,2.8,1.5,1.8,colors.gray);cube(0,.85,-6.03,2,.9,.06,colors.black);for(let i=0;i<4;i++)cylinder(-1.2+i*.8,1.6,-7,.2,.1,colors.black);cube(0,1.05,0,5,.25,3,colors.wood);for(const x of [-1.3,0,1.3])cylinder(x,1.25,0,.45,.08,colors.white);cube(-6,.75,3,2,1.5,2,colors.green);cube(-6,1.55,3,2.2,.15,2.2,colors.gold);human(3,4,colors.red);label('惜食永續廚房',0,3.65,-9.75,5)}
+function recycle(){base(0xc5dbe4,0xbac7c8);cube(0,2,-10,23,4,.25,colors.steel);for(const x of [-10,10])cube(x,3,-5,.25,6,10,colors.gray);cube(0,1,-3,13,.35,2.2,colors.gray);for(let x=-5.5;x<6;x+=1.1)cylinder(x,.75,-3,.28,2.1,colors.black).rotation.x=Math.PI/2;for(let i=0;i<3;i++){const x=-6+i*6;const c=[colors.blue,colors.gold,colors.green][i];cube(x,1.05,3,3.2,2.1,2.4,c);cube(x,2.2,3,3.4,.2,2.5,colors.gray);label(['紙類','塑膠','玻璃'][i],x,1.3,4.27,1.8)}for(let i=0;i<5;i++){cube(-7+i*.7,.45,-7,.58,.9,.5,colors.wood);cylinder(4+i*.7,.45,-7,.22,.9,colors.blue)}label('資源循環中心',0,3.6,-9.75,5)}
+function care(){base(0xe4dcd1,0xdecdb7);cube(0,2,-10,23,4,.25,colors.white);for(const x of [-7,0,7]){cube(x,.9,-3,3.3,.18,2.2,colors.wood);for(const dx of [-1.2,1.2])for(const z of [-3.8,-2.2])cube(x+dx,.43,z,.13,.86,.13,colors.dark);cylinder(x,1.06,-3,.42,.08,colors.white)}for(const x of [-6,1,6]){cube(x,.55,0,1,.2,1,colors.blue);cube(x,.98,.48,1,.9,.16,colors.blue)}cube(0,.03,5,16,.07,3,M(0xf1e6cf));const ramp=cube(8,.19,3,2,.22,4,M(0xc9b596));ramp.rotation.x=-.09;human(-5,-5,colors.gold,true);human(2,-5,colors.blue,true);human(7,-5,colors.green);for(const x of [-8,8]){cylinder(x,.5,7,.5,1,colors.wood);ball(x,1.3,7,.65,colors.green)}label('友善共融餐廳',0,3.6,-9.75,5)}
+
+// === 競賽美術強化：每關獨立的場景細節與裝飾 ===
+function cone(x,y,z,r,h,m){const o=new THREE.Mesh(new THREE.ConeGeometry(r,h,12),m);o.position.set(x,y,z);o.castShadow=true;scene.add(o);return o}
+function torus(x,y,z,r,t,m){const o=new THREE.Mesh(new THREE.TorusGeometry(r,t,10,28),m);o.position.set(x,y,z);o.castShadow=true;scene.add(o);return o}
+function disk(x,y,z,r,m){const o=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.07,28),m);o.position.set(x,y,z);scene.add(o);return o}
+function decorationSign(text,x,y,z,w=2.3,background='#ffffff',foreground='#325d43'){
+ const c=document.createElement('canvas');c.width=512;c.height=180;const g=c.getContext('2d');
+ g.fillStyle=background;g.fillRect(0,0,512,180);g.strokeStyle='#e0d3ac';g.lineWidth=12;g.strokeRect(8,8,496,164);
+ g.fillStyle=foreground;g.textAlign='center';g.textBaseline='middle';g.font='bold 55px Microsoft JhengHei';g.fillText(text,256,94);
+ const tex=new THREE.CanvasTexture(c),p=new THREE.Mesh(new THREE.PlaneGeometry(w,w*180/512),new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide}));
+ p.position.set(x,y,z);scene.add(p);return p;
+}
+function flower(x,z,c=0xf2b85c){
+ cylinder(x,.26,z,.045,.5,colors.green);
+ for(let i=0;i<6;i++){const a=i*Math.PI/3;ball(x+Math.cos(a)*.18,.61,z+Math.sin(a)*.18,.13,M(c))}
+ ball(x,.62,z,.13,colors.gold)
+}
+function hangingLamp(x,z){cylinder(x,3.65,z,.025,.7,colors.gray);cone(x,3.22,z,.46,.42,colors.gold);ball(x,2.98,z,.12,M(0xfff4cb))}
+function foodPlate(x,z,color){disk(x,1.35,z,.42,colors.white);ball(x,1.46,z,.24,M(color));ball(x+.23,1.43,z-.1,.14,colors.green)}
+function enhanceMarket(){
+ for(let i=0;i<10;i++){const x=-10+i*2.2;flower(x,8,i%2?0xf3d67b:0xf2a7a1)}
+ for(const x of [-9,9])for(const z of [-8,0,8])tree(x,z);
+ for(const x of [-5,4]){
+  for(let k=0;k<4;k++){const xx=x-1.4+k*.85;
+   cube(xx,1.11,-1.1,.72,.14,.75,colors.dark);
+   for(let j=0;j<3;j++)ball(xx-.22+j*.22,1.39,-1.1,.16,[colors.red,colors.green,colors.gold][k%3])
+  }
+  decorationSign('當季・在地',x,2.55,.42,2.5,'#fff4cf','#497341');
+ }
+ for(let k=0;k<5;k++){const x=-8+k*1.6;cone(x,.45,-5,.36,.65,colors.green)}
+ for(let k=0;k<6;k++){const x=2+k*1.1;cube(x,.22,6,.65,.42,.65,colors.wood);ball(x,.57,6,.23,k%2?colors.red:colors.gold)}
+ decorationSign('綠色採購・支持小農',0,2.8,9.5,4.6,'#f8fff0','#2d7144');
+}
+function enhanceKitchen(){
+ for(let x=-9;x<=9;x+=2.2){cube(x,2.65,-9.55,1.65,1.05,.52,colors.wood);cube(x,2.15,-9.24,.09,.18,.08,colors.steel)}
+ for(const x of [-6,0,6])hangingLamp(x,1);
+ for(const x of [-1.3,0,1.3])foodPlate(x,0,[0xe26b4c,0xe4b852,0x67a46c][Math.round(x+1.3)]);
+ for(let i=0;i<4;i++){cylinder(2+i*.42,1.38,0,.13,.4,[colors.red,colors.green,colors.gold,colors.blue][i])}
+ cube(7,.9,2,2.2,1.8,1.6,colors.steel);cube(7,1.85,2,2.2,.15,1.7,colors.white);
+ for(let i=0;i<3;i++){cylinder(6.5+i*.5,2.2,2,.2,.35,[colors.gold,colors.red,colors.green][i])}
+ decorationSign('先進先出・珍惜食物',-5,2.6,-9.52,4.4,'#fff5df','#795d34');
+ decorationSign('惜食料理工作站',5,2.6,-9.52,3.6,'#e8fff5','#326b57');
+}
+function enhanceRecycle(){
+ for(let i=0;i<3;i++){const x=-6+i*6;
+  decorationSign(['紙類 PAPER','塑膠 PLASTIC','玻璃 GLASS'][i],x,2.85,4.26,3.4,'#fffbea','#375e6a');
+  for(let j=0;j<3;j++){const xx=x-1+j;
+   if(i===0)cube(xx,.36,6,.55,.7,.5,colors.wood);
+   if(i===1)cylinder(xx,.44,6,.19,.75,colors.blue);
+   if(i===2)cylinder(xx,.44,6,.16,.75,colors.green);
+  }
+ }
+ for(let x=-5;x<=5;x+=2){cube(x,1.32,-3,.7,.32,.6,colors.wood)}
+ for(let x of [-9,9]){cube(x,2,-7,.7,4,.7,colors.gray);ball(x,4.25,-7,.28,colors.gold)}
+ for(let i=0;i<5;i++){const x=-8+i*4;cube(x,.12,8,2.5,.07,.18,colors.white)}
+ decorationSign('分類正確・資源再生',0,3,-9.5,4.4,'#eaf8ff','#30677b');
+}
+function enhanceCare(){
+ for(const x of [-7,0,7]){
+  cube(x,.8,-3,2.7,.08,1.6,M(0xf8eee0));
+  foodPlate(x,-3,0xe9b04d);
+  for(const dx of [-.8,.8])cylinder(x+dx,1.16,-3,.11,.3,colors.white);
+  hangingLamp(x,-3);
+ }
+ for(const x of [-8,8]){cube(x,2,-9.5,2.6,1.6,.08,M(0xb1d4d4));cube(x,2.8,-9.4,2.8,.1,.1,colors.wood)}
+ for(let i=0;i<5;i++){const z=-7+i*3;cube(-10,.06,z,1.1,.06,.18,M(0xc3bba8))}
+ // 輪椅模型：靠背、坐墊、輪子與把手
+ cube(5,.8,3,.9,.18,.9,colors.blue);cube(5,1.3,3.45,.9,1.1,.14,colors.blue);
+ for(const x of [4.45,5.55]){const w=torus(x,.53,3,.48,.08,colors.gray);w.rotation.y=Math.PI/2}
+ cube(4.5,.94,3,.1,.1,.85,colors.gray);cube(5.5,.94,3,.1,.1,.85,colors.gray);
+ decorationSign('友善・尊重・自主',0,2.8,-9.5,4.6,'#fff5e6','#826041');
+ decorationSign('無障礙友善動線',0,.55,6.8,3.2,'#f2ffed','#3b764d');
+}
+const enhancements=[enhanceMarket,enhanceKitchen,enhanceRecycle,enhanceCare];
+
+
+// 卡通美術進階：地板紋理、空間結構、立體道具、氛圍光與動態物件
+const motionProps=[];
+function cyl2(x,y,z,rTop,rBottom,h,m,seg=20){const o=new THREE.Mesh(new THREE.CylinderGeometry(rTop,rBottom,h,seg),m);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;scene.add(o);return o}
+function ellipse(x,y,z,rx,ry,rz,m){const o=ball(x,y,z,1,m);o.scale.set(rx,ry,rz);return o}
+function plank(x,y,z,w,h,d,m,rot=0){const o=cube(x,y,z,w,h,d,m);o.rotation.y=rot;return o}
+function skyCloud(x,y,z){const cloud=new THREE.Group();for(const [dx,dy,r] of [[-.7,0,.6],[0,.3,.8],[.75,0,.55]]){const o=new THREE.Mesh(new THREE.SphereGeometry(r,12,10),new THREE.MeshBasicMaterial({color:0xffffff}));o.position.set(dx,dy,0);cloud.add(o)}cloud.position.set(x,y,z);scene.add(cloud);motionProps.push({o:cloud,type:'cloud',base:x})}
+function groundTexture(a,b){const c=document.createElement('canvas');c.width=c.height=512;const ctx=c.getContext('2d');ctx.fillStyle=a;ctx.fillRect(0,0,512,512);ctx.strokeStyle=b;ctx.lineWidth=3;for(let i=0;i<16;i++){ctx.beginPath();ctx.moveTo(i*32,0);ctx.lineTo(i*32,512);ctx.stroke();ctx.beginPath();ctx.moveTo(0,i*32);ctx.lineTo(512,i*32);ctx.stroke()}const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);const o=new THREE.Mesh(new THREE.PlaneGeometry(23,23),new THREE.MeshStandardMaterial({map:t,roughness:.94}));o.rotation.x=-Math.PI/2;o.position.y=.017;o.receiveShadow=true;scene.add(o)}
+function awning(x,z){const group=new THREE.Group();group.position.set(x,0,z);scene.add(group);const c=[0xf6eee0,0xb95b4c];for(let i=0;i<8;i++){const m=new THREE.Mesh(new THREE.BoxGeometry(.6,.14,3.5),M(c[i%2]));m.position.set(-2.1+i*.6,3.52,0);m.rotation.z=i<4?-.12:.12;group.add(m)}for(let i=0;i<9;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.17,10,8),M(c[i%2]));m.position.set(-2.4+i*.6,3.3,1.7);group.add(m)}}
+function produceCrate(x,z,c){cube(x,.33,z,1.35,.58,1.05,colors.wood);for(let i=0;i<4;i++)for(let j=0;j<3;j++){ellipse(x-.43+i*.28,.72,z-.33+j*.32,.16,.13,.16,M(c))}for(let side of [-1,1])cube(x+side*.67,.43,z,.07,.5,1.1,colors.dark)}
+function cookingPan(x,z){cyl2(x,1.45,z,.65,.58,.14,colors.black);cyl2(x,1.53,z,.55,.55,.04,colors.steel);cube(x+.83,1.48,z,1.1,.12,.18,colors.black);for(let i=0;i<3;i++)ellipse(x-.25+i*.25,1.64,z,.15,.09,.16,[colors.red,colors.gold,colors.green][i])}
+function refrigerator(x,z){cube(x,1.8,z,2.2,3.5,1.65,M(0xd4e5e3));cube(x,2.55,z+.84,2,.08,.08,colors.gray);cube(x+.72,1.35,z+.86,.09,.95,.08,colors.steel);cube(x+.72,2.95,z+.86,.09,.5,.08,colors.steel);decorationSign('冷藏保存',x,3.15,z+.88,1.55,'#eaf7ff','#366a79')}
+function recyclingLogo(x,y,z){const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');g.fillStyle='#ffffff';g.beginPath();g.arc(128,128,114,0,Math.PI*2);g.fill();g.fillStyle='#398a69';g.font='bold 165px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('♻',128,133);const m=new THREE.Mesh(new THREE.PlaneGeometry(1.5,1.5),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),transparent:true,side:THREE.DoubleSide}));m.position.set(x,y,z);scene.add(m)}
+function windowPanel(x,y,z){cube(x,y,z,3,2.1,.12,M(0xe9f1e6));cube(x,y,z+.08,2.7,1.8,.04,M(0x98c9d2));cube(x,y,z+.15,.12,1.9,.1,colors.white);cube(x,y,z+.15,2.85,.1,.1,colors.white)}
+function improvedPerson(x,z,shirt,old=false){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);const m=M(shirt);const torso=new THREE.Mesh(new THREE.CapsuleGeometry(.34,.55,5,10),m);torso.position.y=1.02;g.add(torso);const face=new THREE.Mesh(new THREE.SphereGeometry(.29,16,12),colors.skin);face.position.y=1.72;g.add(face);const hair=new THREE.Mesh(new THREE.SphereGeometry(.30,16,12,0,Math.PI*2,0,Math.PI*.5),M(old?0xc1c0b9:0x4d3a2e));hair.position.y=1.83;g.add(hair);for(const side of [-1,1]){const arm=new THREE.Mesh(new THREE.CapsuleGeometry(.10,.42,4,8),m);arm.position.set(side*.45,1.07,0);arm.rotation.z=side*.23;g.add(arm);const leg=new THREE.Mesh(new THREE.CapsuleGeometry(.12,.4,4,8),colors.dark);leg.position.set(side*.17,.32,0);g.add(leg)}for(const side of [-1,1])ellipse(x+side*.095,1.74,z+.27,.025,.03,.025,colors.black);motionProps.push({o:g,type:'person',base:0})}
+function warmLight(x,z,color=0xffd5a2){const l=new THREE.PointLight(color,8,7,2);l.position.set(x,2.9,z);scene.add(l);return l}
+function makePolishedScene(i){motionProps.length=0;
+ if(i===0){groundTexture('#92bb7c','#86ae72');for(let j=0;j<2;j++)awning([-5,4][j],-1);for(let x of [-7,-5,-3,2,4,6])produceCrate(x,[-.3,-.3,-.3,-.3,-.3,-.3][0],[0xe35d4e,0xe3b44e,0x6da657][(x+7)%3]);for(let x=-8;x<=8;x+=2)for(let z of [-8,-7,-6])ellipse(x,.35,z,.23,.3,.23,colors.green);skyCloud(-6,7,-10);skyCloud(7,6,-12);improvedPerson(-8,2,0xe6a34f);improvedPerson(6,1,0x6f9bc0);for(let x=-9;x<=9;x+=3)flower(x,9,0xf1a3a2);decorationSign('歡迎來到花花小農市集',0,2.3,10,5,'#fff8d7','#377c51')}
+ if(i===1){groundTexture('#d8ddd6','#bdc9c8');refrigerator(5,-6);cookingPan(0,-7);for(let x of [-8,-5,-2]){cube(x,2.7,-9.55,2.1,1.1,.6,colors.wood);cube(x,2.16,-9.19,.15,.17,.12,colors.steel)}for(let x of [-5,0,5])warmLight(x,0);for(let x of [-1.5,0,1.5]){cyl2(x,1.32,0,.48,.48,.08,colors.white);ellipse(x,1.43,0,.32,.1,.28,colors.green)}improvedPerson(3,5,0xdb795b);decorationSign('從產地到餐桌・不浪費',0,2.4,8,5,'#fff3d6','#865e31')}
+ if(i===2){groundTexture('#c0cbcd','#a9b9bb');for(let x of [-6,0,6])recyclingLogo(x,1.2,4.4);for(let x=-6;x<7;x+=1.5){const item=cube(x,1.35,-3,.6,.35,.55,colors.wood);motionProps.push({o:item,type:'conveyor',base:x})}for(let x of [-8,8]){cyl2(x,3,-8,.25,.25,6,colors.gray);warmLight(x,-5,0xb9e8ff)}for(let x of [-6,0,6]){const o=cube(x,2.65,3,3.5,.12,2.5,colors.white);o.material=M(0xeeeeeb)}decorationSign('資源分類・循環再生',0,2.5,8,5,'#e4f7ff','#326d7b')}
+ if(i===3){groundTexture('#e6d9c6','#d3c3ac');for(let x of [-7,0,7]){windowPanel(x,2,-9.73);warmLight(x,-3);for(let z of [-5,-1]){cyl2(x,.72,z,.17,.17,1.4,colors.dark);cyl2(x,1.45,z,1.15,1.15,.13,colors.wood)}}for(let x of [-5,2])improvedPerson(x,-5,0x7697bd,true);improvedPerson(7,-5,0x5da482);for(let x of [-8,8]){cyl2(x,.45,5,.47,.4,.9,colors.wood);ellipse(x,1.25,5,.8,.9,.8,colors.green)}decorationSign('每個人都值得被尊重',0,2.5,8,5,'#fff2e1','#866447')}
+}
+function animatePolish(t){for(const p of motionProps){if(p.type==='cloud')p.o.position.x=p.base+Math.sin(t*.13)*.7;if(p.type==='person')p.o.rotation.y=Math.sin(t*.6+p.o.position.x)*.08;if(p.type==='conveyor')p.o.position.x=p.base+((t*.38)%1.5);if(p.type==='steam'){p.o.position.y=p.base+Math.sin(t*1.6+p.phase)*.13;p.o.material.opacity=.15+.09*(1+Math.sin(t*1.5+p.phase))}}}
+
+
+// ===== 第一關：全新市集美術試驗場（保留原本遊戲玩法） =====
+const marketAnimated=[];
+function marketMaterial(color,roughness=.78){return new THREE.MeshStandardMaterial({color,roughness,metalness:0})}
+function marketMesh(geometry,material,x,y,z,parent=scene){const o=new THREE.Mesh(geometry,material);o.position.set(x,y,z);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o}
+function marketBox(x,y,z,w,h,d,color,parent=scene){return marketMesh(new THREE.BoxGeometry(w,h,d),marketMaterial(color),x,y,z,parent)}
+function marketSphere(x,y,z,r,color,parent=scene){return marketMesh(new THREE.SphereGeometry(r,18,12),marketMaterial(color),x,y,z,parent)}
+function marketCylinder(x,y,z,rt,rb,h,color,parent=scene){return marketMesh(new THREE.CylinderGeometry(rt,rb,h,16),marketMaterial(color),x,y,z,parent)}
+function marketText(text,x,y,z,width=3,fg='#fff9e9',bg='#477754'){
+ const c=document.createElement('canvas');c.width=768;c.height=192;const g=c.getContext('2d');g.fillStyle=bg;g.fillRect(0,0,768,192);g.strokeStyle='#e8c78b';g.lineWidth=14;g.strokeRect(9,9,750,174);g.fillStyle=fg;g.textAlign='center';g.textBaseline='middle';g.font='bold 74px Microsoft JhengHei, sans-serif';g.fillText(text,384,98);const t=new THREE.CanvasTexture(c);t.colorSpace=THREE.SRGBColorSpace;return marketMesh(new THREE.PlaneGeometry(width,width/4),new THREE.MeshBasicMaterial({map:t,side:THREE.DoubleSide}),x,y,z)
+}
+function marketFruit(x,y,z,kind,scale=1){
+ if(kind==='carrot'){const a=marketMesh(new THREE.ConeGeometry(.13*scale,.44*scale,10),marketMaterial(0xf28b36),x,y,z);a.rotation.z=Math.PI;for(let k=-1;k<=1;k++){const leaf=marketMesh(new THREE.ConeGeometry(.045*scale,.25*scale,7),marketMaterial(0x4e9d53),x+k*.06*scale,y+.29*scale,z);leaf.rotation.z=k*.35}return}
+ if(kind==='corn'){const a=marketCylinder(x,y,z,.13*scale,.14*scale,.44*scale,0xf5c94d);for(let k of [-1,1]){const leaf=marketSphere(x+k*.11*scale,y-.08*scale,z,.12*scale,0x5d9f50);leaf.scale.set(.35,1.6,.55)}return}
+ const palette={tomato:0xe9554d,pumpkin:0xe7a143,lettuce:0x74ad59,eggplant:0x815aab,apple:0xdb514b};const a=marketSphere(x,y,z,.19*scale,palette[kind]||0xd96d4b);if(kind==='pumpkin')a.scale.set(1.35,.78,1.15);if(kind==='eggplant')a.scale.set(.72,1.35,.8);marketCylinder(x,y+.19*scale,z,.035*scale,.04*scale,.12*scale,0x477a3e)
+}
+function marketWoodCrate(x,z,kind){marketBox(x,.64,z,1.45,.53,1.12,0xa56c3f);marketBox(x,.89,z,1.52,.12,1.18,0xc18a52);for(const side of [-1,1])marketBox(x+side*.72,.65,z,.08,.45,1.18,0x714c30);for(let i=0;i<4;i++)for(let j=0;j<3;j++)marketFruit(x-.5+i*.32,1.04,z-.36+j*.36,kind,.78)}
+function marketStall(x,z,kind,title,roofColor){
+ const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);
+ // raised wood deck, decorative frame and double-pitched roof
+ marketBox(0,.16,0,4.75,.28,3.4,0x987044,g);
+ for(const a of [-2.12,2.12])for(const b of [-1.4,1.4])marketBox(a,1.95,b,.18,3.6,.18,0x68482e,g);
+ marketBox(0,3.6,0,4.7,.15,3.4,0x76513c,g);
+ for(const side of [-1,1]){const panel=marketBox(side*1.12,3.96,0,2.55,.15,3.75,roofColor,g);panel.rotation.z=side*.33}
+ for(let k=0;k<9;k++){const stripe=marketBox(-2+k*.5,3.43,1.75,.24,.37,.12,k%2?0xffefcc:roofColor,g);stripe.rotation.z=k%2?.1:-.1}
+ marketBox(0,1.25,.32,3.9,.22,1.7,0x704a32,g);marketBox(0,1.08,.32,3.8,.14,1.65,0xe7c18b,g);
+ for(let k=0;k<3;k++)for(let j=0;j<2;j++)marketFruit(x-1.15+k*1.15,1.49,z+.08+j*.56,kind,1.25);
+ for(let k=0;k<4;k++){marketBox(-1.6+k*1.05,.36,1.2,.88,.46,.78,0x9a673d,g)}
+ marketText(title,x,2.75,z+1.79,3.25,'#fff5d8','#51774a');
+ const lamp=new THREE.PointLight(0xffd99a,3.4,6,2);lamp.position.set(0,2.7,.5);g.add(lamp);
+ return g
+}
+function marketHouse(x,z,wall,roof){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);marketBox(0,2,0,4.2,4,3.6,wall,g);const a=marketBox(-1.1,4.22,0,2.5,.25,4.15,roof,g);a.rotation.z=-.56;const b=marketBox(1.1,4.22,0,2.5,.25,4.15,roof,g);b.rotation.z=.56;marketBox(0,1,1.84,1.2,2,.08,0x85583d,g);for(const side of [-1,1]){marketBox(side*1.3,2.5,1.84,.9,1.05,.08,0xf9e5b3,g);marketBox(side*1.3,2.5,1.9,.08,1.05,.08,0x73573b,g)}return g}
+function marketTree(x,z){const g=new THREE.Group();g.position.set(x,0,z);scene.add(g);marketCylinder(0,1.1,0,.18,.26,2.2,0x7a583a,g);for(const [dx,dy,dz,r] of [[0,2.7,0,1.05],[-.7,2.35,.15,.75],[.7,2.35,0,.8],[0,2.2,.65,.65]]){const o=marketSphere(dx,dy,dz,r,0x62a36c,g);o.scale.y=.85}for(let i=0;i<5;i++)marketSphere(Math.sin(i*2.3)*.6,2.4+Math.cos(i)*.35,.7,.09,0xf4d37d,g)}
+function storyCharacter(shirt=0x4c9a8a,hat=false,apron=false){
+ const g=new THREE.Group(), skin=M(0xf1c9a5),cloth=M(shirt),hair=M(0x44352e),boots=M(0x574738);
+ const part=(geo,mat,x,y,z)=>{const m=new THREE.Mesh(geo,mat);m.position.set(x,y,z);m.castShadow=true;g.add(m);return m};
+ const sph=(x,y,z,rx,ry,rz,mat)=>{const o=part(new THREE.SphereGeometry(1,16,12),mat,x,y,z);o.scale.set(rx,ry,rz);return o};
+ const cyl=(x,y,z,r1,r2,h,mat)=>part(new THREE.CylinderGeometry(r1,r2,h,14),mat,x,y,z);
+ // Front of character points toward negative Z (toward the market street).
+ for(const x of [-.18,.18]){cyl(x,.34,0,.12,.135,.52,M(0x55636c));sph(x,.095,-.105,.19,.11,.28,boots)}
+ sph(0,.97,0,.39,.56,.29,cloth);
+ if(apron){const a=part(new THREE.BoxGeometry(.56,.7,.06),M(0xf7e6c3),0,.87,-.28);a.rotation.x=-.06;sph(0,1.1,-.325,.16,.06,.04,M(0xb77b53))}
+ for(const side of [-1,1]){const a=sph(side*.44,1.03,0,.145,.38,.15,cloth);a.rotation.z=side*.22;sph(side*.55,.72,-.02,.12,.14,.13,skin)}
+ sph(0,1.72,0,.33,.36,.31,skin);sph(0,1.97,.06,.34,.16,.31,hair);
+ for(const side of [-1,1]){sph(side*.14,1.75,-.287,.042,.055,.022,M(0x322a26));sph(side*.14,1.77,-.305,.012,.014,.008,M(0xffffff));sph(side*.24,1.65,-.24,.07,.05,.045,M(0xf0a69a))}
+ sph(0,1.63,-.322,.085,.023,.012,M(0x9b544d));
+  if(hat){cyl(0,2.1,0,.48,.48,.09,M(0xe4bd7a));cyl(0,2.25,0,.28,.34,.25,M(0xc48b53));cyl(0,2.16,0,.3,.3,.05,M(0x6c9b67))}
+  else { // side-swept bangs and layered hair instead of a single helmet-like cap
+    for(let i=0;i<4;i++){const bang=sph(-.20+i*.13,1.94,-.205,.105,.11,.105,hair);bang.rotation.z=-.18+i*.08}
+    sph(-.29,1.71,.045,.095,.24,.19,hair);sph(.29,1.71,.045,.095,.24,.19,hair);
+  }
+  // collar, pockets and a small scarf for recognisable character clothing
+  sph(0,1.35,-.24,.23,.075,.09,M(0xffe8c5));
+  for(const side of [-1,1])sph(side*.19,.83,-.278,.11,.10,.025,M(0xffffff));
+ return g;
+}
+function marketPerson(x,z,shirt,hat=false){const g=storyCharacter(shirt,hat,true);g.position.set(x,0,z);g.rotation.y=x<0?-.35:.35;scene.add(g);marketAnimated.push({g,x,z});return g}
+function marketLanterns(){for(let i=0;i<13;i++){const x=-10+i*1.65;marketSphere(x,4.85,7.6,.17,i%3===0?0xffd776:i%3===1?0xf5a5a5:0xe6f6d2);if(i<12)marketBox(x+.82,4.99,7.6,1.65,.022,.022,0x72543c)}}
+function buildShowcaseMarket(){
+ // Distinctive high-detail village market scene, not just the original geometric stalls
+ marketHouse(-9,-9,0xf2c995,0xb96c52);marketHouse(9,-9,0xe9d9aa,0x8caa78);
+ marketStall(-4.6,-1.9,'tomato','在地鮮採番茄',0xc45f55);
+ marketStall(4.6,-1.9,'lettuce','當季有機蔬菜',0x6e9d69);
+ marketStall(-4.6,5.2,'carrot','小農新鮮蔬果',0xe4aa5d);
+ marketStall(4.6,5.2,'pumpkin','惜食好物專區',0x7da5a1);
+ for(const [x,z,k] of [[-8,3,'tomato'],[-8,5,'corn'],[8,3,'lettuce'],[8,5,'carrot'],[-1,-7,'pumpkin'],[1,-7,'eggplant']])marketWoodCrate(x,z,k);
+ for(const [x,z] of [[-10,0],[10,0],[-10,8],[10,8]])marketTree(x,z);
+ for(let i=0;i<14;i++){const z=-9+i*1.4;marketBox(0,.035,z,2.45,.045,.8,i%2?0xd6c8a3:0xe5d5b5)}
+ for(let i=0;i<12;i++){const z=-8+i*1.4;for(const x of [-1.55,1.55])marketSphere(x,.09,z,.1,i%2?0xf5e3c5:0xceddb3)}
+ marketPerson(-7,1.4,0xe1a34c,true);marketPerson(7,1.4,0x74a5be,true);marketPerson(-1.8,3,0xc67875);marketPerson(1.9,-6.7,0x7d9c69);
+ marketLanterns();
+ marketText('花花小農・永續市集',0,5.25,-8.2,6.2,'#fff6d7','#356d55');
+ const glow=new THREE.DirectionalLight(0xffd6a6,1.4);glow.position.set(8,11,3);scene.add(glow);
+ // new label in the UI makes version identification unambiguous
+ $('sceneTitle').textContent='🥕 第一關｜精緻市集美術測試版';
+}
+
+
+// === V3 童話街道：以玩家步行高度呈現完整市場街景 ===
+function buildStorybookMarket(){
+ marketAnimated.length=0;
+ scene.background=new THREE.Color(0x9fd1ed);
+ scene.fog=new THREE.Fog(0x9fd1ed,26,64);
+ const stone=M(0xb5a88f),mortar=M(0x8e8c7b),timber=M(0x69412d),cream=M(0xf3d5a4),roof=M(0xaf5b3d);
+ marketBox(0,-.25,0,25,.5,27,0x75aa68);
+ // Cobblestone pedestrian lane running between market stalls
+ marketBox(0,.025,-.1,5.3,.06,23,0xc7b9a0);
+ for(let zi=0;zi<24;zi++)for(let xi=0;xi<5;xi++){
+  const z=-11+zi*.96,x=-2.05+xi*1.02+(zi%2?.3:0);
+  const o=marketBox(x,.075,z,.92,.04,.81,[(0xc6b59a),(0xb9ad98),(0xd6c7ac)][(zi+xi)%3]);
+  o.rotation.y=((zi*3+xi)%5-2)*.025;
+ }
+ // Half-timbered village houses along the lane
+ for(let side of [-1,1])for(let j=0;j<4;j++){
+  const x=side*9.1,z=-9.4+j*5.6;
+  const wall=marketBox(x,2.25,z,4.8,4.5,5.1,[0xe6c69a,0xe8d7b5,0xdac7a0,0xe9c49b][j]);
+  const frontX=x-side*2.45;
+  for(let yy of [.22,2.2,4.18])marketBox(frontX,yy,z,.19,.18,5.05,0x75472d);
+  for(let zz of [-2.35,0,2.35])marketBox(frontX,2.2,z+zz,.18,4.3,.18,0x75472d);
+  for(let zz of [-1.1,1.1]){
+   marketBox(frontX-side*.035,2.9,z+zz,.1,1.05,1.05,0x6d4d35);
+   marketBox(frontX-side*.11,2.9,z+zz,.09,.82,.82,0x83b5b6);
+   marketBox(frontX-side*.16,2.9,z+zz,.1,.08,.85,0xf4e7ce);
+  }
+  // visible steep gabled roof
+  const r1=marketBox(x-1.16,5.07,z,2.8,.27,5.8,j%2?0x98543e:0xa76548);r1.rotation.z=-.66;
+  const r2=marketBox(x+1.16,5.07,z,2.8,.27,5.8,j%2?0x98543e:0xa76548);r2.rotation.z=.66;
+  for(let q=0;q<7;q++)marketBox(x-2.4+q*.8,4.52,z+2.95,.055,.5,.1,0xe4b879);
+ }
+ // Solid timber-framed stalls oriented towards the central walking street
+ for(const [side,z,type,title,accent] of [
+  [-1,-6.4,'tomato','在地鮮採',0xb4513f],[1,-6.4,'lettuce','當季蔬菜',0x638a56],
+  [-1,1.5,'carrot','小農蔬果',0xc58c3e],[1,1.5,'pumpkin','惜食選物',0x719e85]]){
+  const x=side*4.45;
+  marketBox(x,.92,z,3.7,.18,2.5,0x8d5836);
+  for(const dx of [-1.7,1.7])for(const dz of [-1.05,1.05])marketBox(x+dx,1.78,z+dz,.17,3.55,.17,0x6b422b);
+  for(let q=0;q<7;q++){
+   const a=marketBox(x-1.52+q*.5,3.48,z,.51,.15,3.05,q%2?0xe5c99d:accent);
+   a.rotation.z=q<3?-.10:.10;
+  }
+  marketBox(x,1.55,z,3.45,.13,2.35,0x633d26);
+  for(let k=0;k<3;k++){
+   const xx=x-1.05+k*1.05;
+   marketWoodCrate(xx,z+.35,[type,type==='tomato'?'carrot':'corn',type==='lettuce'?'tomato':'lettuce'][k]);
+  }
+  // small hanging sign at eye height (not blocking central view)
+  marketText(title,x,2.68,z+1.27,2.3,'#f6e6c0','#42633d');
+ }
+ // Side baskets, planters and hanging pennants
+ for(let z=-10;z<=9;z+=3.5){
+  for(let side of [-1,1]){
+   const x=side*6.8;
+   marketWoodCrate(x,z,z%2?'tomato':'carrot');
+   marketCylinder(side*6.4,.43,z+1,.35,.4,.85,0x8d593b);
+   for(let k=0;k<4;k++)storybookFlower(side*6.4+Math.cos(k*1.57)*.2,z+1+Math.sin(k*1.57)*.2,0xf2c17a, .66);
+  }
+ }
+ for(let z of [-9,-3,3]){
+  marketBox(0,5.4,z,13,.035,.035,0x76523b);
+  for(let k=0;k<13;k++){
+   const x=-6+k;
+   const flag=new THREE.Mesh(new THREE.ConeGeometry(.27,.7,3),M([0xf0c65c,0xd67d62,0x7bb6a0][k%3]));
+   flag.position.set(x,5.06,z);flag.rotation.z=Math.PI;scene.add(flag);
+  }
+ }
+ marketPerson(-3.2,-8,0xc77e55,true);
+ marketPerson(3.1,-2.5,0x669a76,true);
+ marketPerson(-2.8,4.2,0x8a7cbd);
+ // mission points are accessible in the center lane
+ levels[0].tasks[0].pos=[-1.6,-6.4];
+ levels[0].tasks[1].pos=[1.6,-2.4];
+ levels[0].tasks[2].pos=[-1.6,3.8];
+ const fill=new THREE.DirectionalLight(0xffd4a5,1.25);fill.position.set(5,12,0);scene.add(fill);
+ $('sceneTitle').textContent='🥕 童話小農市集 V3';
+}
+
+
+// V6: market uses the same already-proven Kenney CC0 GLB pipeline as the kitchen.
+// Every downloaded GLB is an actual mesh in the playable Three.js scene, not a background picture.
+let marketBuildToken=0,marketLoaded=0,marketFailed=0;
+const marketGLB=new GLTFLoader();
+function updateMarketLoading(){
+ if(level!==0)return;
+ const el=$('assetStatus');
+ if(el)el.textContent='🥕 市集立體食材／道具：已載入 '+marketLoaded+' 件'+(marketFailed?'，未載入 '+marketFailed+' 件':'')+'（需連線；基本街景可離線顯示）';
+}
+function placeMarketGLB(pack,name,x,z,height=.5,rotation=0){
+ const token=marketBuildToken;
+ const url='https://cdn.jsdelivr.net/gh/Hidencod/tge-assets@main/packs/'+pack+'/'+name+'.glb';
+ marketGLB.load(url,gltf=>{
+  if(level!==0||token!==marketBuildToken)return;
+  const obj=gltf.scene,box=new THREE.Box3().setFromObject(obj),size=box.getSize(new THREE.Vector3()),center=box.getCenter(new THREE.Vector3());
+  if(size.y<.001){marketFailed++;updateMarketLoading();return}
+  const k=height/size.y;obj.scale.setScalar(k);obj.position.set(x-center.x*k,-box.min.y*k,z-center.z*k);obj.rotation.y=rotation;
+  obj.traverse(m=>{if(m.isMesh){m.castShadow=true;m.receiveShadow=true}});scene.add(obj);
+  marketLoaded++;updateMarketLoading();
+ },undefined,e=>{if(level===0&&token===marketBuildToken){marketFailed++;updateMarketLoading();console.warn('市集3D模型無法載入',name,e)}});
+}
+function buildAssetMarket(){
+ marketBuildToken++;marketLoaded=0;marketFailed=0;
+ buildStorybookMarket();
+ // Extra storybook architecture, cobbles, timber detailing, produce display and ambient life.
+ for(const side of [-1,1])for(const z of [-9.4,-3.8,1.8,7.4]){
+   const x=side*6.58;
+   for(const y of [1.2,3.75]){
+    marketBox(x,y,z,.15,.16,4.5,0x805339);
+   }
+   for(const zz of [-1.65,1.65]){
+    marketBox(x,2.45,z+zz,.14,2.6,.14,0x805339);
+   }
+   for(const zz of [-1.15,1.15]){
+    marketBox(x-side*.15,1.4,z+zz,.13,.14,.95,0xf7d78b);
+   }
+ }
+ // Flowerbeds, baskets and an archway. Leave the middle lane unobstructed for the player.
+ for(const side of [-1,1])for(const z of [-8.8,-4.4,.1,4.8,8.1]){
+  const x=side*7.6;
+  marketCylinder(x,.29,z,.55,.65,.58,0xa67550);
+  for(let i=0;i<6;i++){
+   const a=i*Math.PI/3;
+   marketSphere(x+Math.cos(a)*.31,.71,z+Math.sin(a)*.31,.21,0x55915c);
+   marketSphere(x+Math.cos(a)*.32,.91,z+Math.sin(a)*.32,.11,[0xf4b6ae,0xf6d26e,0xe9d2ef][i%3]);
+  }
+ }
+ for(const x of [-2.3,2.3])marketCylinder(x,2.25,-10.6,.13,.13,4.5,0x866044);
+ const arch=new THREE.Mesh(new THREE.TorusGeometry(2.32,.14,8,28,Math.PI),marketMaterial(0x986f4a));
+ arch.rotation.z=Math.PI;arch.position.set(0,4.52,-10.6);scene.add(arch);
+ for(const x of [-2.1,2.1])for(const z of [-10.5,-10.15])marketSphere(x,4.1,z,.25,0x609a6a);
+ // V7: extra market details: tiled roofs, window boxes, wooden lanterns, barrels, flower planters.
+ for(const side of [-1,1])for(let j=0;j<4;j++){
+  const x=side*9.1,z=-9.4+j*5.6,front=x-side*2.6;
+  // Aged timber-framed walls: diagonal braces and little flower-filled windows.
+  for(const zz of [-1.75,1.75]){
+   const beam=marketBox(front,3.05,z+zz,.13,2.2,.12,0x78472f);
+   beam.rotation.x=zz>0?.44:-.44;
+  }
+  for(const zz of [-1.1,1.1]){
+   marketBox(front-side*.23,2.28,z+zz,.24,.12,1.05,0x895638);
+   marketBox(front-side*.32,2.38,z+zz,.34,.25,1.12,0xa46d46);
+   for(let f=0;f<4;f++){
+    marketSphere(front-side*.32,2.58,z+zz-.38+f*.25,.12,0x51985e);
+    marketSphere(front-side*.42,2.7,z+zz-.38+f*.25,.06,[0xf5afae,0xf6d16d,0xd5b2e8][f%3]);
+   }
+  }
+  for(let k=0;k<8;k++){
+   const zz=z-2.45+k*.7;
+   for(const roofside of [-1,1]){
+    const tile=marketBox(x+roofside*1.23,5.27,zz,2.52,.065,.045,0xd99768);
+    tile.rotation.z=roofside*.66;
+   }
+  }
+ }
+ for(const side of [-1,1])for(const z of [-7.7,-1.1,5.5]){
+  const x=side*6.45;
+  marketCylinder(x,.44,z,.37,.44,.82,0x94603e);
+  for(const y of [.24,.62])marketCylinder(x,y,z,.39,.39,.055,0x584c41);
+  for(let k=0;k<3;k++)marketBox(x-.32+k*.32,1.2,z,.12,.08,.65,0xd1a66c);
+  // Lantern hung from a small crooked arm, safely outside the walking lane.
+  marketCylinder(x,2.1,z,.075,.075,2.0,0x74513c);
+  marketBox(x-side*.3,3.05,z,.7,.09,.09,0x74513c);
+  marketCylinder(x-side*.55,2.72,z,.18,.25,.4,0xf6d17d);
+  marketCylinder(x-side*.55,2.94,z,.22,.22,.07,0x6d563d);
+ }
+ // Wooden baskets with distinct produce colours at the edges of the stalls.
+ for(const side of [-1,1])for(const z of [-6.1,1.8]){
+  const x=side*3.55;
+  marketCylinder(x,.33,z,.48,.38,.55,0x9d7145);
+  for(let k=0;k<7;k++){
+   const a=k*Math.PI*2/7;
+   marketSphere(x+Math.cos(a)*.28,.64,z+Math.sin(a)*.28,.16,k%3===0?0xf3a348:k%3===1?0x5f9d55:0xcf5943);
+  }
+ }
+ // Real GLB props are placed at stall edges, NOT over the three task markers or walking corridor.
+ const food=[
+  ['carrot',-5.7,-6.3,.64],['carrot',-4.9,-6.5,.58],['carrot',-4.1,-6.2,.66],
+  ['carrot',-5.6,1.7,.65],['carrot',-4.7,1.5,.6],['carrot',-3.9,1.9,.64],
+  ['carton',4.0,1.4,.76],['carton-small',5.0,1.5,.54],
+  ['carrot',5.4,-6.1,.55],['carton',4.2,-6.2,.63],
+  ['carton-small',5.5,5.0,.53],['carrot',-5.2,5.0,.62]
+ ];
+ for(const [name,x,z,h] of food)placeMarketGLB('food-kit',name,x,z,h,Math.PI*.22);
+ for(const [name,x,z,h] of [['plantsmall1',-7.7,-7.1,1.1],['plantsmall2',7.6,-7.0,1.05],['plantsmall1',-7.7,5.8,1.1],['plantsmall2',7.6,5.9,1.1]])
+   placeMarketGLB('furniture-kit',name,x,z,h);
+ updateMarketLoading();
+}
+
+// V5: actual third-party CC0 GLB meshes from Kenney Furniture Kit and Food Kit.
+const kitchenGLB=new GLTFLoader();
+const kitchenAssetRoot='https://cdn.jsdelivr.net/gh/Hidencod/tge-assets@main/packs/';
+let kitchenBuildToken=0;
+function placeKitchenGLB(pack,name,x,z,targetHeight=1.8,rotation=0){
+ const token=kitchenBuildToken;
+ const url=kitchenAssetRoot+pack+'/'+name+'.glb';
+ kitchenGLB.load(url,gltf=>{
+   if(level!==1||token!==kitchenBuildToken)return;
+   const model=gltf.scene;
+   const bounds=new THREE.Box3().setFromObject(model);
+   const size=bounds.getSize(new THREE.Vector3());
+   const center=bounds.getCenter(new THREE.Vector3());
+   if(size.y<.001)return;
+   const scale=targetHeight/size.y;
+   model.scale.setScalar(scale);
+   model.position.set(x-center.x*scale,-bounds.min.y*scale,z-center.z*scale);
+   model.rotation.y=rotation;
+   model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true}});
+   scene.add(model);
+   kitchenLoaded++;
+   updateKitchenLoading();
+ },undefined,err=>{if(level===1&&token===kitchenBuildToken){kitchenFailed++;updateKitchenLoading();console.warn('3D模型載入失敗:',url,err)}});
+}
+let kitchenLoaded=0,kitchenFailed=0;
+function updateKitchenLoading(){if(level!==1)return;const el=$('assetStatus');if(el)el.textContent='真實3D模型：已載入 '+kitchenLoaded+' 件'+(kitchenFailed?'，失敗 '+kitchenFailed+' 件':'')+'（需要網路）'}
+function buildAssetKitchen(){
+ kitchenBuildToken++;kitchenLoaded=0;kitchenFailed=0;
+ base(0xd8e8e6,0xd3c8b8);
+ scene.fog=new THREE.Fog(0xd8e8e6,35,65);
+ cube(0,2.4,-10.6,23,4.8,.35,M(0xfff5e8));
+ cube(-11,2.4,0,.3,4.8,21,M(0xf6e6d5));
+ cube(11,2.4,0,.3,4.8,21,M(0xf6e6d5));
+ for(let x=-10;x<11;x+=2){cube(x,.025,0,.04,.035,21,M(0xc6b9a8));}
+ for(let z=-10;z<11;z+=2){cube(0,.027,z,22,.035,.04,M(0xc6b9a8));}
+ // Functional kitchen zoning, leaving an unobstructed walking corridor.
+ for(const x of [-8,-5,-2,1,4,7]){cube(x,3.6,-10.32,2.4,.12,.14,M(0xb77b55));}
+ for(const x of [-7,0,7]){hangingLamp(x,-2);warmLight(x,-4,0xffe1b4)}
+ decorationSign('惜食永續廚房｜真實3D模型',0,3.4,-10.32,6,'#fff4d9','#6b593c');
+ decorationSign('冷藏保存',6,2.9,-10.12,2.5,'#e9f6ff','#39718b');
+ decorationSign('適量備餐',0,2.9,-10.12,2.5,'#fff2d9','#99662f');
+ decorationSign('廚餘分類',-6,2.9,-10.12,2.5,'#e7f7df','#407944');
+ // Asset source: Kenney CC0 models mirrored by Tiny Game Engine.
+ const F=(name,x,z,h=1.8,rot=0)=>placeKitchenGLB('furniture-kit',name,x,z,h,rot);
+ const D=(name,x,z,h=.5,rot=0)=>placeKitchenGLB('food-kit',name,x,z,h,rot);
+ F('kitchenfridgelarge',6,-6,3.3);F('kitchenfridge',8,-6,2.7);
+ F('kitchenstove',-1,-6.7,2.2);F('kitchenstoveelectric',1.8,-6.7,2.0);
+ F('kitchensink',-7,-6.7,1.6);F('kitchenmicrowave',3.5,-6.8,1.15);
+ F('kitchencabinet',-7,-4.7,1.2);F('kitchencabinetdrawer',-5,-6.8,1.2);
+ F('kitchencabinetupper',-4,-9.8,1.4);F('kitchencoffeemachine',-3,-6.8,1.05);
+ F('kitchencabinet',-3,2.8,1.25);F('kitchencabinetdrawer',0,2.8,1.25);
+ F('kitchencabinet',3,2.8,1.25);F('kitchensink',7,2.7,1.4);
+ F('plantsmall1',-9,-8,1.0);F('plantsmall2',9,7,1.0);
+ // Ingredient meshes, rather than spheres: each has its own actual GLB geometry.
+ for(const [name,x,z] of [['carrot',-3,1.6],['carrot',-2.3,1.6],['carrot',-1.6,1.6],['carton',0,1.4],['carton-small',1.2,1.5]])D(name,x,z,.65);
+ // Clear interaction points, compatible with original three missions.
+ levels[1].tasks[0].pos=[6,-4];
+ levels[1].tasks[1].pos=[0,4.4];
+ levels[1].tasks[2].pos=[-6,4.4];
+ // Visible fallback geometry remains if third-party CDN is unreachable.
+ cube(-6,.55,4.4,1.6,1.1,1.3,M(0x72a66d));
+ cube(0,.55,4.4,2.4,1.1,1.4,M(0xc08c63));
+ buildV11KitchenArt();
+ buildV13KitchenArt();
+ buildV14KitchenExperience();
+ $('toast').textContent='V13惜食廚房：冰箱順序挑戰、份量調整、廚餘分類三種不同互動。';
+}
+
+
+// V11: detailed in-world kitchen set dressing, independent of remote GLB loading.
+function buildV11KitchenArt(){
+ const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.68});
+ const ivory=mat(0xfff3d8),oak=mat(0xb77c4f),dark=mat(0x624331),mint=mat(0x72b5a3),steel=mat(0xa4b8bc),pink=mat(0xe5a28d),yellow=mat(0xf2c76d),leaf=mat(0x65a46e);
+ const B=(x,y,z,w,h,d,m)=>cube(x,y,z,w,h,d,m),S=(x,y,z,r,m)=>ball(x,y,z,r,m),C=(x,y,z,r,h,m)=>cylinder(x,y,z,r,h,m);
+ // Restaurant zoning: back-wall cooking line, side storage, and front service island.
+ // Wall cladding and warm tiled backsplash.
+ B(0,2.25,-10.33,21.5,3.85,.08,ivory);
+ for(let x=-10;x<=10;x+=.75)B(x,1.7,-10.25,.025,2.2,.02,mat(0xe3d9c6));
+ for(let y=.7;y<2.8;y+=.48)B(0,y,-10.23,21,.025,.025,mat(0xe3d9c6));
+ B(0,.14,-8.9,20,.28,2.25,mat(0xc79d72));
+ B(0,1.05,-8.95,19.5,.16,1.75,steel);
+ // Cooking line: double range and distinctive large extraction hood.
+ for(const x of [-2.5,0,2.5]){
+   B(x,.56,-8.95,2.05,.9,1.65,mat(0x748c8d));
+   B(x,1.12,-8.95,2.02,.13,1.7,mat(0x3c494c));
+   for(const dx of [-.48,.48])for(const dz of [-.43,.43]){
+      C(x+dx,1.21,-8.95+dz,.23,.045,mat(0x202c31));
+      const ring=torus(x+dx,1.24,-8.95+dz,.18,.027,mat(0xbcc6c7));ring.rotation.x=Math.PI/2;
+   }
+ }
+ B(0,3.48,-9.15,8.5,.38,2.0,mat(0x8ca9a9));
+ B(0,3.03,-9.15,7.4,.62,1.35,steel);
+ for(let x=-3.2;x<3.3;x+=.8)B(x,3.07,-8.43,.055,.52,.07,mat(0x728b8e));
+ B(0,3.9,-10.1,2.3,.6,.5,steel);
+ // Stockpots with handles and warm food surfaces.
+ for(const [x,z,r,col] of [[-2.5,-8.95,.47,0xd88c57],[0,-8.95,.54,0xefd29a],[2.5,-8.95,.42,0x80b276]]){
+   C(x,1.52,z,r,.5,mat(0x9db2b3));C(x,1.79,z,r*.92,.045,mat(col));
+   for(const dx of [-1,1])B(x+dx*(r+.13),1.56,z,.32,.1,.12,steel);
+ }
+ // Left: sink and dishwashing area, with faucet and stacked clean dishes.
+ B(-8.05,.83,-8.8,3.25,1.55,1.7,mat(0x8aa9a3));B(-8.05,1.64,-8.8,3.3,.14,1.8,steel);
+ for(const x of [-8.8,-7.35]){B(x,1.69,-8.8,1.18,.055,1.06,mat(0x617b80));B(x,1.65,-8.8,.95,.06,.86,mat(0x384e54));
+ C(x,2.01,-9.27,.045,.65,steel);B(x,2.34,-9.08,.47,.07,.08,steel);}
+ for(let i=0;i<6;i++)C(-9.45+i*.22,1.85,-7.5,.17,.07,ivory);
+ // Right: pantry shelves and colorful jars.
+ for(const y of [1.05,2.02,3.02])B(8.5,y,-8.95,3.5,.13,1.2,oak);
+ for(const x of [6.8,10.2])B(x,2,-8.95,.12,3.7,1.2,dark);
+ for(let row=0;row<3;row++)for(let j=0;j<7;j++){
+   const x=7.15+j*.43,y=1.2+row*.98;
+   C(x,y,-8.88,.15,.36,[pink,yellow,leaf,mint][(row+j)%4]);
+   C(x,y+.22,-8.88,.17,.07,ivory);
+ }
+ // Central food prep island: readable at player scale, food, boards and utensils.
+ B(0,.78,-2.0,6.2,1.4,2.25,mat(0x9f7858));B(0,1.56,-2.0,6.6,.16,2.5,mat(0xf2e6cf));
+ for(const x of [-2.55,2.55])for(const z of [-2.85,-1.15])B(x,.45,z,.16,.85,.16,dark);
+ B(-1.75,1.69,-1.95,1.65,.09,1.02,oak);
+ for(let i=0;i<5;i++){
+   S(-2.25+i*.24,1.86,-1.95,.13,[mat(0xe56f53),leaf,yellow][i%3]);
+ }
+ B(.75,1.68,-1.95,1.5,.08,1.05,mat(0xd6e5e0));
+ for(const x of [.3,.75,1.2]){C(x,1.79,-1.95,.28,.06,ivory);S(x,1.87,-1.95,.14,[pink,leaf,yellow][Math.round(x*10)%3]);}
+ for(let j=0;j<3;j++)C(2.4,1.67+j*.065,-1.8,.29,.06,ivory);
+ // Three distinct sorting bins, with readable labels and colored lids.
+ for(const [x,color,name] of [[-8.1,0x73a56a,'廚餘'],[-6.6,0xe7b55b,'回收'],[-5.1,0x7e9caa,'一般垃圾']]){
+   B(x,.64,4.8,1.12,1.28,1.05,mat(color));B(x,1.35,4.8,1.23,.15,1.14,mat(0xf4e6d2));
+   decorationSign(name,x,1.04,5.36,.95,'#fff7df','#35594b');
+ }
+ // Food storage: wooden racks and produce baskets at the left front.
+ for(const y of [.65,1.45,2.25])B(-8.35,y,-2.0,3.5,.13,1.45,oak);
+ for(const x of [-9.95,-6.75])B(x,1.4,-2,.13,2.7,1.45,dark);
+ for(let j=0;j<4;j++)for(let k=0;k<3;k++){
+   const x=-9.4+j*.7,z=-2.4+k*.37;
+   S(x,.91,z,.2,[mat(0xe97b53),leaf,yellow][j%3]);
+ }
+ // Overhead pot rack and wall decor; these are scene objects, not UI images.
+ B(-4.9,3.85,-7.65,2.4,.1,.1,dark);
+ for(const x of [-5.7,-4.9,-4.1]){
+   C(x,3.35,-7.65,.025,.85,steel);
+   const pan=C(x,2.85,-7.65,.34,.12,mat(0x505e61));pan.rotation.z=.15;
+ }
+ decorationSign('惜食料理・新鮮上桌',0,4.35,-10.09,5.4,'#f8e5bd','#6c4938');
+ decorationSign('清洗區',-8,3.3,-10.06,2.4,'#e4f5f1','#346b65');
+ decorationSign('冷藏・食材管理',8,4.25,-10.05,3.2,'#e8f5fc','#426f83');
+ // Chef and assistant, with visible faces/aprons and hats.
+ function chef(x,z,shirt){const g=storyCharacter(shirt,false,true);g.position.set(x,0,z);g.rotation.y=Math.PI;scene.add(g);
+   const hat=mat(0xfffcf0);C(x,2.22,z,.35,.17,hat);for(const dx of [-.18,0,.18])S(x+dx,2.45,z,.22,hat);
+   return g;}
+ chef(-3.9,-4.4,0xe6a27d);chef(4.2,-5.5,0x83b9aa);
+ // Focused warm accent lights without overexposing the entire room.
+ for(const x of [-6,0,6]){const l=new THREE.PointLight(0xffe3b4,1.5,9,2);l.position.set(x,3.7,-5.8);scene.add(l);}
+ // Keep missions near their respective workstations and outside furniture.
+ levels[1].tasks[0].pos=[6,-4.4];
+ levels[1].tasks[1].pos=[0,1.2];
+ levels[1].tasks[2].pos=[-6.2,6.5];
+}
+
+
+// V13: visually richer, lived-in restaurant kitchen; all details are real meshes.
+function buildV13KitchenArt(){
+ const m=c=>new THREE.MeshStandardMaterial({color:c,roughness:.67,metalness:.04});
+ const B=(x,y,z,w,h,d,c)=>cube(x,y,z,w,h,d,m(c));
+ const S=(x,y,z,r,c)=>ball(x,y,z,r,m(c));
+ const C=(x,y,z,r,h,c)=>cylinder(x,y,z,r,h,m(c));
+ const wood=0x8b5b3c,cream=0xffe8c0,terracotta=0xd77c54,teal=0x579d98;
+ // Color-blocked working zones, ceiling trim and tiled wall accents.
+ for(const [x,w,c] of [[-7.7,6.1,0x96c9bb],[0,7.8,0xf0bf82],[7.8,6.1,0xa5c9dc]]){
+   B(x,4.34,-10.04,w,.48,.12,c);
+   B(x,2.5,-10.015,w,.08,.07,c);
+ }
+ for(let x=-10;x<=10;x+=1.3)B(x,4.57,-9.65,.1,.18,1.7,wood);
+ // Distinct framed work-station signs.
+ decorationSign('① 清洗・整理',-7.4,3.75,-9.98,3.3,'#e2f7ee','#256a5b');
+ decorationSign('② 熱食烹調',0,4.02,-9.98,3.5,'#fff0d3','#875132');
+ decorationSign('③ 冷藏保鮮',7.4,3.75,-9.98,3.3,'#e6f5fc','#316c8c');
+ // Busy prep wall: hanging utensils and herb bundles.
+ for(let i=0;i<9;i++){
+   const x=-4.6+i*.47;
+   C(x,2.65,-9.94,.032,.48,0x586e71);
+   if(i%3===0){const ladle=C(x,2.37,-9.93,.16,.055,0x889b9e);ladle.rotation.x=Math.PI/2;}
+   else if(i%3===1)B(x,2.37,-9.94,.16,.35,.055,0x8d9d9e);
+   else S(x,2.34,-9.93,.13,0x52686c);
+ }
+ // Two open display shelves stocked with jars, dishes, baskets and produce.
+ for(const side of [-1,1]){
+   const x=side*8.7,z=-4.7;
+   for(const y of [1.0,1.9,2.8])B(x,y,z,3.4,.13,.9,wood);
+   for(const xx of [x-1.55,x+1.55])B(xx,1.78,z,.14,3.4,.9,0x634b36);
+   for(let row=0;row<3;row++)for(let j=0;j<6;j++){
+     const xx=x-1.3+j*.51, yy=1.17+row*.89;
+     if((j+row)%3===0){C(xx,yy,z,.16,.31,0xd5b58d);C(xx,yy+.18,z,.18,.06,0xeee5ce);}
+     else if((j+row)%3===1)S(xx,yy,z,.19,[0xe77c4b,0x77a969,0xf0bb56][j%3]);
+     else {C(xx,yy,z,.2,.08,0xe8e8d8);C(xx,yy+.09,z,.19,.06,0xf7f2e8);}
+   }
+ }
+ // Preparation counter with open baskets, chopping boards and food trays.
+ for(const x of [-3.2,3.2]){
+   B(x,.78,-4.0,2.6,1.35,1.55,0x9c6a46);B(x,1.52,-4.0,2.9,.15,1.72,0xf5e4c9);
+   B(x-.55,1.65,-4.05,.95,.08,.73,0x9c714c);
+   for(let i=0;i<5;i++)S(x-.95+i*.18,1.78,-4.08,.12,[0xd95741,0x6eae61,0xf2c24e][i%3]);
+   for(let i=0;i<3;i++){C(x+.6,1.65+i*.055,-4.05,.32,.06,0xfff8e8);}
+ }
+ // Copper pans on the side wall, with curved handles and metallic rims.
+ for(let i=0;i<4;i++){
+   const z=-7.7+i*.88;
+   const pan=C(-10.6,2.42,z,.27,.11,i%2?0xc98654:0x6f8f90);pan.rotation.z=Math.PI/2;
+   B(-10.57,2.42,z+.38,.07,.08,.45,0x705342);
+ }
+ // Food service pass and ticket rail at rear: visual sign of an active kitchen.
+ B(0,2.17,-7.15,5.7,.12,.65,0x8d5f41);
+ for(let i=0;i<6;i++){
+   const x=-2.15+i*.87;
+   C(x,2.29,-7.1,.28,.07,0xfaf5e9);
+   if(i%2===0)S(x,2.41,-7.1,.16,0xe69b57);
+ }
+ B(0,2.85,-7.2,5.9,.09,.11,0x6c5b4d);
+ for(let i=0;i<6;i++)B(-2.3+i*.9,2.64,-7.2,.47,.38,.04,i%2?0xffedcc:0xf5e0b7);
+ // Potted herbs along edges (no loose spherical ground clutter).
+ for(const [x,z] of [[-9.6,3.0],[-9.5,7.6],[9.4,3.4],[9.3,7.5]]){
+   C(x,.28,z,.34,.53,0xc67b53);
+   for(let i=0;i<6;i++){
+     const a=i*Math.PI/3;
+     B(x+Math.cos(a)*.16,.75,z+Math.sin(a)*.16,.07,.56,.06,0x4b8762);
+     S(x+Math.cos(a)*.29,1.02,z+Math.sin(a)*.29,.18,i%2?0x6cad72:0x87bc68);
+   }
+ }
+ // Warm light panels and ceiling beams; add contrast to previously flat room.
+ for(const x of [-5,0,5]){
+   B(x,4.67,-5.4,2.5,.08,.8,0xffefd4);
+   const light=new THREE.PointLight(0xffdfac,.85,7,2);light.position.set(x,4.25,-5.2);scene.add(light);
+ }
+ // Food-safe information boards for educational theme.
+ decorationSign('今日惜食菜單',-5.0,3.22,-9.96,2.4,'#fff2d8','#865f42');
+ decorationSign('先進先出 FIFO',7.3,2.45,-9.96,2.4,'#e4f4ff','#426f83');
+ // Steam above stockpots; translucent volumes with gentle movement.
+ for(const x of [-2.5,0,2.5])for(let i=0;i<3;i++){
+   const puff=S(x+(i-1)*.14,2.08+i*.33,-8.96,.12+i*.04,0xf3f4eb);
+   puff.material.transparent=true;puff.material.opacity=.24;
+   motionProps.push({type:'steam',o:puff,base:puff.position.y,phase:x+i});
+ }
+}
+
+// V8: additional interactive-scene art; all objects are real Three.js meshes.
+function enrichStorybookV8(){
+ const pastel=[0xe9b5a3,0xf2d99b,0xb5d5c1,0xc9b8dd];
+ // Decorative dormers and layered slate shingles, offset for depth.
+ for(const side of [-1,1])for(let j=0;j<4;j++){
+  const x=side*9.1,z=-9.4+j*5.6;
+  for(const rz of [-1.5,1.35]){
+   const o=marketBox(x-side*.15,5.12,z+rz,1.05,.95,.18,0xf3dfbd);
+   const glass=marketBox(x-side*.17,5.18,z+rz, .65,.59,.2,0x84b5bc);
+   marketBox(x-side*.19,5.18,z+rz,.68,.065,.23,0xf9f1d5);
+   marketBox(x-side*.2,5.18,z+rz,.065,.63,.24,0xf9f1d5);
+   const cap=marketBox(x-side*.16,5.67,z+rz,1.3,.14,.42,0x86553c);cap.rotation.z=side*.16;
+  }
+  for(let k=0;k<9;k++)for(const r of [-1,1]){
+   const tile=marketBox(x+r*(.47+(k%2)*.08),4.7+k*.115,z-2.35+(k%3)*.14, .55,.045,4.2, j%2?0xc17e5d:0xb16a54);
+   tile.rotation.z=r*.5;
+  }
+  // warm timber-framed hanging shop signs
+  const fx=x-side*2.66;
+  marketBox(fx-side*.25,3.05,z+.3,.11,.85,.12,0x6d482f);
+  marketBox(fx-side*.31,2.72,z+.3,.15,.54,.95,0xb98751);
+ }
+ // Stall fabric scallops, hanging garlic and baskets, outside center walking lane.
+ for(const side of [-1,1])for(const [j,z] of [-6.4,1.5].entries()){
+  const x=side*4.45,accent=side<0?0xd88a69:0x91b98a;
+  for(let k=0;k<8;k++){
+   const bx=x-1.55+k*.44;
+   marketSphere(bx,3.29,z+1.52,.22,k%2?0xffe6bd:accent);
+   if(k%2===0){marketCylinder(bx,2.95,z+1.49,.025,.025,.5,0xc7ad82);marketSphere(bx,2.69,z+1.49,.12,0xf2e6ce)}
+  }
+  for(let k=0;k<3;k++){
+   const bx=x-1.05+k*1.05;
+   marketCylinder(bx,.56,z+1.1,.34,.37,.28,0xb98756);
+   for(let a=0;a<5;a++)marketFruit(bx+Math.cos(a*1.26)*.2,.83,z+1.1+Math.sin(a*1.26)*.18,(k+a)%2?'tomato':'carrot',.6);
+  }
+ }
+ // Ornamental pavement edges, herb gardens and cozy lampposts.
+ for(let z=-10;z<=10;z+=1.05){
+  for(const side of [-1,1]){
+   marketBox(side*2.69,.095,z,.12,.13,.82,0xe2d2b6);
+   if(Math.round(z*10)%3===0){
+    const x=side*3.0;
+    storybookFlower(x,z,pastel[Math.abs(Math.round(z))%4]);
+   }
+  }
+ }
+ // V9: low lanterns at the outer edges, never tall posts in the foreground.
+ for(const side of [-1,1])for(const z of [-9.2,8.1]){
+  const x=side*3.35;
+  marketCylinder(x,.38,z,.10,.13,.72,0x6a6d52);
+  marketBox(x,.79,z,.35,.34,.35,0x8b6b4c);
+  marketSphere(x,.80,z,.12,0xffe6ae);
+ }
+ // Task names now appear on the star-shaped interaction markers, not floating boards.
+ // V9: make each house visually distinct with varied facade treatments and roof accents.
+ const wallTones=[0xf3d5a9,0xe7cba6,0xd8dfc2,0xf0c7b5];
+ const awningTones=[0xc66d56,0x719b84,0xd8a75b,0x9e7eaf];
+ for(const side of [-1,1])for(let j=0;j<4;j++){
+   const x=side*9.1,z=-9.4+j*5.6,front=x-side*2.76;
+   // decorative timber storefront and a striped awning near each doorway
+   marketBox(front,1.03,z,.15,1.92,1.5,0x805337);
+   marketBox(front-side*.085,1.03,z,.08,1.70,1.27,wallTones[j]);
+   marketBox(front-side*.18,1.96,z, .22,.16,1.85,0x745039);
+   for(let k=0;k<5;k++){
+     const stripe=marketBox(front-side*.34,2.04,z-.85+k*.42,.65,.10,.41,k%2?0xf4e4c8:awningTones[(j+(side>0?1:0))%4]);
+     stripe.rotation.z=side*.16;
+   }
+   // front-facing window boxes with flowers, sized to the actual street perspective
+   for(const dz of [-1.5,1.5]){
+     marketBox(front-side*.26,2.68,z+dz,.33,.26,.84,0x9e6a45);
+     for(let f=0;f<3;f++){
+       marketSphere(front-side*.31,2.86,z+dz-.26+f*.26,.12,0x679d62);
+       marketSphere(front-side*.34,2.96,z+dz-.26+f*.26,.07,[0xf6b7a6,0xffd477,0xcbb1e4][(j+f)%3]);
+     }
+   }
+   // Roof ridge trim and dormer silhouette
+   marketBox(x,5.80,z,.16,.13,5.12,j%2?0xf5d4a4:0x6b4639);
+   marketBox(x-side*.15,5.18,z,.65,.62,.68,wallTones[j]);
+   marketBox(x-side*.18,5.17,z,.12,.35,.40,0x9cc6c5);
+ }
+ // tiny grass tufts and flowers keep the street lived-in without blocking navigation
+ for(let k=0;k<20;k++){
+   const z=-9+k*.94;
+   for(const side of [-1,1]){
+     const x=side*(3.12+(k%3)*.13);
+     if(k%4===0)storybookFlower(x,z,[0xffd67c,0xf5b0b2,0xc8b4e4][k%3]);
+   }
+ }
+ // A few colorful storybook NPCs placed at stalls, with facial details and hats.
+ for(const [x,z,c,hat] of [[-5.7,-8.5,0xd78c6a,true],[5.8,-8.4,0x7f9db6,true],[-5.9,3.1,0xb997c9,false],[5.7,3.1,0x80b58b,false]]){
+  const npc=storyCharacter(c,hat,true);npc.position.set(x,0,z);npc.rotation.y=x<0?-.65:.65;scene.add(npc);
+  marketAnimated.push({g:npc,x,z});
+ }
+}
+
+
+// V10: distinct architectural silhouettes and recognizable flowers (all actual 3D geometry).
+function storybookFlower(x,z,color=0xf3b7a4,scale=1){
+ const stem=marketCylinder(x,.22*scale,z,.026*scale,.032*scale,.43*scale,0x4d8d53);
+ for(const side of [-1,1]){const leaf=marketSphere(x+side*.105*scale,.20*scale,z,.12*scale,0x57965d);leaf.scale.set(1.2,.38,.48)}
+ for(let i=0;i<5;i++){const a=i*Math.PI*2/5;const petal=marketSphere(x+Math.cos(a)*.115*scale,.47*scale,z+Math.sin(a)*.115*scale,.09*scale,color);petal.scale.y=.65}
+ marketSphere(x,.47*scale,z,.075*scale,0xf3c65c);
+}
+function v10GabledHouse(side,j){
+ const z=-9.4+j*5.6, x=side*9.1, fx=x-side*2.83;
+ const trims=[0x9b5741,0x587e72,0x88679c,0xb48045],roof=[0xb45e48,0x678e7b,0x836b92,0xc18c4c];
+ // distinctive arched shop door on every second facade
+ if(j%2===0){
+  marketBox(fx-side*.05,1.02,z,.16,1.88,1.24,0x76503a);
+  marketBox(fx-side*.16,1.04,z,.09,1.55,.95,0x9e6d4a);
+  const arch=marketMesh(new THREE.TorusGeometry(.48,.065,7,20,Math.PI),marketMaterial(0xf2d3a0),fx-side*.23,1.84,z);
+  arch.rotation.y=Math.PI/2;arch.rotation.z=Math.PI/2;
+ }else{
+  // timber storefront with decorative signboard and window shutters
+  marketBox(fx-side*.15,1.4,z,.12,1.25,1.55,0x94c0bd);
+  for(const dz of [-.86,.86])marketBox(fx-side*.23,1.42,z+dz,.16,1.44,.19,trims[j]);
+ }
+ // chimney and smoke-colored cap, alternated so skyline is not repetitive
+ const chimneyX=x+(j%2?-.95:.95);
+ marketBox(chimneyX,5.8,z+(j%2?.85:-1.0),.65,1.75,.65,0xa87458);
+ marketBox(chimneyX,6.73,z+(j%2?.85:-1.0),.84,.18,.83,0xe9c99e);
+ // hanging shop sign near wall, oriented along the street
+ const signs=['鮮採小舖','花草工坊','烘焙小屋','農村選物'];
+ const sign=marketText(signs[j],0,0,0,1.65,'#fff5db','#58775c');
+ sign.position.set(fx-side*.5,2.85,z+.7);sign.rotation.y=side*Math.PI/2;
+ // extra triangular roof finial and patterned ridge
+ for(let k=0;k<5;k++){
+  const fin=marketMesh(new THREE.ConeGeometry(.13,.34,4),marketMaterial(roof[j]),x,5.98,z-2.1+k*1.05);
+  fin.rotation.y=Math.PI/4;
+ }
+ // varied awning hanging under shop windows
+ for(let k=0;k<5;k++){
+  const aw=marketBox(fx-side*.43,2.21,z-1+k*.5,.62,.07,.49,k%2?0xf7e8ce:trims[j]);
+  aw.rotation.z=side*.15;
+ }
+ // actual petal flowers in window boxes
+ for(const dz of [-1.45,1.45])for(let k=0;k<3;k++)storybookFlower(fx-side*.43,z+dz+(k-1)*.24,[0xf4a6b4,0xf4ce76,0xcab0ea][k],.8);
+}
+function buildV10Art(){
+ for(const side of [-1,1])for(let j=0;j<4;j++)v10GabledHouse(side,j);
+ // Plant beds: low wooden planters with individual stems, leaves and petals.
+ for(const side of [-1,1])for(const z of [-8.4,-4.1,.5,5.0,8.7]){
+  const x=side*3.12;
+  marketBox(x,.24,z,.52,.34,1.35,0x9c714a);
+  marketBox(x,.43,z,.46,.08,1.28,0x634e35);
+  for(let k=0;k<4;k++)storybookFlower(x,z-.45+k*.30,[0xf1a6b1,0xf6d37d,0xc7b5e6,0xf2b785][k],.88);
+ }
+ // Rustic low baskets and hand-painted vegetable displays, off the walking route.
+ for(const [x,z,type] of [[-5.2,-5.4,'tomato'],[5.3,-5.3,'lettuce'],[-5.1,2.6,'carrot'],[5.2,2.6,'pumpkin']]){
+  marketCylinder(x,.30,z,.55,.46,.5,0x95643f);
+  const rim=marketMesh(new THREE.TorusGeometry(.48,.065,8,24),marketMaterial(0xd7aa73),x,.56,z);rim.rotation.x=Math.PI/2;
+  for(let k=0;k<6;k++){const a=k*Math.PI/3;marketFruit(x+Math.cos(a)*.28,.67,z+Math.sin(a)*.28,type,.7)}
+ }
+ // A cozy village well / landmark beyond the end of the road, not blocking mission points.
+ marketCylinder(0,.52,-11.5,1.05,1.1,.92,0xc5b79d);
+ marketCylinder(0,1.01,-11.5,1.13,1.13,.15,0xe6d4b1);
+ for(const xx of [-.82,.82])marketCylinder(xx,2.02,-11.5,.12,.12,2.1,0x75563d);
+ const canopy=marketBox(0,3.25,-11.5,2.7,.2,2.1,0x9b624c);canopy.rotation.z=.12;
+ // Different NPC outfit and visible faces on the front of characters.
+ for(const [x,z,c] of [[-6.0,-2.7,0xd99474],[6.1,5.5,0x7595bd]]){
+  const g=storyCharacter(c,true,true);g.position.set(x,0,z);g.rotation.y=x<0?-1.15:1.15;scene.add(g);marketAnimated.push({g,x,z});
+ }
+}
+
+
+// V14: near-camera working zones, readable equipment, animated steam and prep action.
+const v14Animated=[];
+function buildV14KitchenExperience(){
+ v14Animated.length=0;
+ const mat=(c,metalness=0)=>new THREE.MeshStandardMaterial({color:c,roughness:.62,metalness});
+ const b=(x,y,z,w,h,d,c)=>cube(x,y,z,w,h,d,mat(c));
+ const sp=(x,y,z,r,c)=>ball(x,y,z,r,mat(c));
+ const cy=(x,y,z,r,h,c)=>cylinder(x,y,z,r,h,mat(c));
+ // Work stations placed along the player-accessible perimeter; center corridor remains clear.
+ const zones=[[-7.3,1.6,0x5b9f93,'① 冷藏保鮮'],[7.25,1.6,0xe0a55e,'② 適量備餐'],[-7.3,5.3,0x7daab6,'③ 廚餘分類']];
+ for(const [x,z,color,name] of zones){
+  b(x,.055,z,3.7,.055,2.7,color);
+  b(x,.24,z-1.27,3.7,.36,.13,color);
+  decorationSign(name,x,2.65,z-1.4,2.65,'#fff9e9','#375b50');
+ }
+ // A cold-storage trolley with produce and labelled trays.
+ b(-7.2,.66,1.65,2.6,1.2,1.25,0xcbd9d6);
+ b(-7.2,1.32,1.65,2.8,.13,1.42,0xe7f1eb);
+ for(let i=0;i<3;i++){
+  b(-8.05+i*.83,1.45,1.62,.68,.17,.8,0xa6c5b7);
+  for(let j=0;j<3;j++)sp(-8.25+i*.83+j*.18,1.64,1.55,.13,[0xe7814d,0x75aa62,0xe5c052][i]);
+ }
+ // Lively prep station: chopping board, bowls, vegetables and moving chef hand.
+ b(7.25,.73,1.6,3.3,1.36,1.9,0xa46c45);
+ b(7.25,1.45,1.6,3.5,.16,2.08,0xf3dfbd);
+ b(6.7,1.57,1.55,1.25,.08,.78,0xb88c5c);
+ for(let i=0;i<5;i++)sp(6.35+i*.18,1.72,1.55,.12,i%2?0x83b966:0xe98b55);
+ for(let i=0;i<3;i++)cy(8.2,1.57+i*.065,1.35,.37,.06,0xf8f2e7);
+ const knife=b(6.7,1.87,1.45,.08,.35,.5,0xa5b3b4);v14Animated.push({type:'knife',o:knife,base:1.87});
+ // Sorting bins visible in the foreground with a clear gap for walking.
+ for(let i=0;i<3;i++){
+  const x=-8.35+i*1.08;
+  b(x,.61,5.4,.91,1.15,.9,[0x6da77a,0xe5c268,0x79aab5][i]);
+  b(x,1.22,5.4,1.02,.12,.99,[0x3c8050,0xc69c38,0x4f7f91][i]);
+ }
+ // Culinary activity: multiple pans, copper hanging utensils and warm steam.
+ for(let i=0;i<4;i++){
+  const x=-2.7+i*1.7;
+  cy(x,2.03,-5.5,.52,.18,i%2?0x9b6c52:0x687f83);
+  cy(x,2.16,-5.5,.56,.07,0xe4bb7e);
+  b(x+.57,2.07,-5.5,.75,.1,.13,0x75503a);
+  for(let j=0;j<3;j++){
+   const steam=new THREE.Mesh(new THREE.SphereGeometry(.13+j*.035,10,8),new THREE.MeshStandardMaterial({color:0xffffff,transparent:true,opacity:.3,depthWrite:false}));
+   steam.position.set(x+(j-1)*.17,2.55+j*.23,-5.5);scene.add(steam);
+   v14Animated.push({type:'steam',o:steam,base:2.55+j*.23,phase:i+j});
+  }
+ }
+ // A colored service pass with plated meals, visible behind the prep island.
+ b(0,1.83,-5.0,5.7,.16,1.15,0xb98155);
+ for(let i=0;i<5;i++){
+  const x=-2.2+i*1.1;
+  cy(x,1.99,-4.95,.35,.07,0xfff5e5);
+  sp(x,2.1,-4.95,.19,[0xe5a264,0x81ad71,0xeec16e][i%3]);
+ }
+ // A low, welcoming visual boundary avoids the impression of a huge empty hall.
+ for(const x of [-9.7,9.7])for(let z=1;z<8;z+=2.2){
+  b(x,.56,z,.85,1.05,1.15,0xa16d4d);
+  b(x,1.12,z,.97,.12,1.25,0xf0d9aa);
+  for(let k=0;k<3;k++)sp(x,1.29,z-.35+k*.34,.18,[0xe47d53,0x79aa67,0xf0bf5d][k]);
+ }
+ // Bright overhead lighting, without covering the play area.
+ for(const x of [-5,0,5]){const light=new THREE.PointLight(0xffdfb3,12,12,2);light.position.set(x,4.15,0);scene.add(light)}
+}
+function animateV14(t){if(level!==1)return;for(const a of v14Animated){if(a.type==='steam'){a.o.position.y=a.base+((t*.48+a.phase*.19)%1.0);a.o.material.opacity=.22*(1-((t*.48+a.phase*.19)%1.0))}else if(a.type==='knife'){a.o.position.y=a.base+Math.abs(Math.sin(t*2.6))*.19}}}
+
+let player=null,markers=[],level=-1,done=[],levelScore=0,total=0,locked=false,keys={},elapsed=0;const unlocked=new Set([0,1,2,3]);const builders=[market,kitchen,recycle,care];
+function resetWorld(){recycleMotion.length=0;marketBuildToken++;kitchenBuildToken++;marketAnimated.length=0;v14Animated.length=0;for(const o of [...scene.children])if(o!==hemi&&o!==sun)scene.remove(o);markers=[];player=null}
+function createPlayer(){player=storyCharacter(0x258d84,false,false);player.position.set(0,0,6.2);scene.add(player)}
+function updatePanel(){if(level<0)return;$('sideTitle').textContent=levels[level].icon+' '+levels[level].name;$('mission').textContent=levels[level].intro;$('score').textContent=levelScore;$('maxScore').textContent=done.length*100;$('progressText').textContent=done.filter(Boolean).length+' / '+done.length;$('meterFill').style.width=done.filter(Boolean).length/done.length*100+'%';$('topScore').textContent='累積 '+total+' 分';$('tasks').innerHTML=levels[level].tasks.map((t,i)=>`<div class="progressitem ${done[i]?'done':''}">${done[i]?'✔':'○'} ${t.name}</div>`).join('')}
+
+// V15: recycling factory with animated conveyors and six hands-on mini-games.
+const recycleMotion=[];
+function buildRecyclingV15(){
+ // V18: 餐旅資源循環實驗室。餐廳後場、分類清洗、循環餐具、堆肥、節能工作站。
+ recycleMotion.length=0;
+ base(0xe8f2df,0xd7c9a9);
+ const m=c=>M(c), cream=m(0xfff4dd), green=m(0x5c9b78), sage=m(0xa8c8a3), timber=m(0x9b7052), steel=m(0x8da6a7), dark=m(0x365e59), coral=m(0xe7a177), blue=m(0x82b6c7), yellow=m(0xf2d17a);
+ // Warm restaurant back-of-house: tiled rear wall, broad windows and exposed timber.
+ cube(0,2.6,-10,23,5.2,.3,cream);
+ for(let x=-10.5;x<11;x+=1.05)for(let y=.35;y<2.4;y+=.8)cube(x,y,-9.81,1.01,.025,.06,m(0xd7e4d9));
+ for(const x of [-10.8,10.8])cube(x,2.6,-4.5,.3,5.2,11,cream);
+ for(const x of [-8,-4.7,4.7,8]){cube(x,3.65,-9.75,2.3,1.65,.12,timber);cube(x,3.65,-9.66,2.04,1.39,.13,m(0xb9e5e7));cube(x,3.65,-9.54,.09,1.5,.05,cream)}
+ for(const z of [-8.7,-4.7,1.4,5.8]){cube(0,5.1,z,21,.22,.25,timber);for(const x of [-7,0,7]){cylinder(x,4.76,z,.035,.45,steel);cylinder(x,4.48,z,.32,.17,yellow)}}
+ // Six learning workstations keep original interaction marker coordinates reachable.
+ const stations=[[-6,1,'01 餐廳分類',0x8ac7a6],[0,1,'02 回收前處理',0x8dc9d7],[6,1,'03 設備安全',0xe9c17d],[-6,-5,'04 循環包裝',0xe8b2a0],[0,-5,'05 餐廳節能',0xb7c6e4],[6,-5,'06 減廢實踐',0xb5d2a2]];
+ for(const [x,z,name,color] of stations){cube(x,.035,z,3.5,.07,3,m(color));cube(x,.12,z-1.33,3.4,.19,.14,timber);decorationSign(name,x,2.35,z-1.3,2.65,'#fff9e9','#35644f')}
+ // Back wall: three distinct restaurant service zones, not an industrial conveyor.
+ decorationSign('餐旅資源循環實驗室',0,4.25,-9.45,6.2,'#fff6d9','#2e6d57');
+ decorationSign('洗淨・分類・重複使用',0,3.52,-9.45,4.6,'#e6f6eb','#367363');
+ // Washing and sorting counter on left.
+ cube(-6,1.0,-7.6,6.3,1.5,2.1,steel);cube(-6,1.83,-7.6,6.5,.18,2.3,cream);
+ for(const x of [-7.2,-4.7]){cube(x,1.78,-7.6,1.55,.10,1.15,dark);cube(x,1.8,-7.6,1.37,.11,.96,m(0x718c91));cylinder(x+.4,2.17,-8.05,.065,.72,steel)}
+ for(let i=0;i<4;i++){const x=-8.5+i*.62;cylinder(x,2.0,-6.9,.2,.13,m([0xa5d4c1,0xe8d6a8,0x9ec9d7,0xd4b6b0][i]))}
+ decorationSign('清空殘液・分類回收',-6.0,2.85,-8.6,3.8,'#f4fff3','#336a5d');
+ // Reusable container washing/drying rack on right.
+ cube(5.8,1.15,-7.8,6.3,2.25,1.8,timber);
+ for(const y of [.65,1.5,2.35]){cube(5.8,y,-6.85,6.1,.12,1.1,cream);for(let i=0;i<7;i++){const x=3.35+i*.77;cylinder(x,y+.18,-6.9,.19,.27,m([0xf5d3a1,0xb7dbca,0xb6d1e2][i%3]))}}
+ decorationSign('循環餐盒・杯具清潔',5.8,3.2,-8.75,4.2,'#fff5df','#37675b');
+ // Center: clean sorting island with actual waste materials and three readable bins.
+ cube(0,.9,-6.65,3.7,1.6,1.6,steel);cube(0,1.76,-6.65,3.9,.16,1.85,cream);
+ for(let i=0;i<3;i++){const x=-1.05+i*1.05;cube(x,1.93,-6.65,.72,.24,.65,m([0xc4a578,0x8cc3d1,0xb1d1a7][i]))}
+ // Distinct compact bins on left, away from player path.
+ for(let i=0;i<3;i++){const x=-8.3+i*1.3;cube(x,.65,4.8,1.0,1.3,1.0,m([0x7bb4d0,0x9acb91,0xe7bd76][i]));cube(x,1.36,4.8,1.14,.13,1.1,dark);decorationSign(['容器','廚餘','一般'][i],x,2.05,4.8,1.15,'#fff9e9','#315f52')}
+ // Compost and organic recovery station, with visible food scraps and a planter.
+ cube(7.8,.75,4.65,2.5,1.5,1.55,green);cube(7.8,1.55,4.65,2.65,.15,1.7,timber);
+ for(let i=0;i<5;i++)ball(7.1+i*.32,1.72,4.6,.18,m([0x8ac16b,0xf0a65f,0xb4ca77][i%3]));
+ decorationSign('惜食廚餘・依規處理',7.7,2.55,4.7,3.4,'#e7f7de','#3e714b');
+ // Restaurant energy management, with meter and safe lighting indicator.
+ cube(.0,1.05,4.6,2.8,1.85,.6,dark);cube(0,1.5,4.94,2.15,.84,.1,blue);
+ for(let i=0;i<4;i++)ball(-.75+i*.5,.83,4.97,.12,m([0x7ac58b,0xf2d17a,0xe69c81,0x7ac58b][i]));
+ decorationSign('節能監測・安全優先',0,2.65,4.6,3.4,'#e9f3ff','#355d70');
+ // Pantry/packaging reduction station: reusable shopping bags and stacked takeout containers.
+ cube(-6.4,.65,-2.9,3.5,1.1,1.3,timber);cube(-6.4,1.28,-2.9,3.7,.16,1.5,cream);
+ for(let i=0;i<4;i++){const x=-7.6+i*.8;cube(x,1.52,-2.9,.64,.32,.7,m([0xa6c9b5,0xf2d1a2,0xd5bdab,0xb5d1df][i]));cube(x,1.75,-2.9,.58,.06,.64,cream)}
+ // Staff and plants; noninteractive decorations avoid blocking mission markers.
+ human(-9,-8,m(0x7da992));human(9,-8,m(0xd58e70));
+ for(const x of [-10,10]){cube(x,.35,7,.75,.7,.75,timber);for(let i=0;i<3;i++){cylinder(x+(i-1)*.18,.96,7,.07,.75,green);ball(x+(i-1)*.18,1.32,7,.19,sage)}}
+ // V20 environmental storytelling: restaurant service counter, plant wall and colored educational wayfinding.
+ for(const x of [-9.5,-7.9,7.9,9.5]){cube(x,3.7,-9.3,.95,.95,.12,m(0x437e5d));ball(x,3.9,-9.12,.28,m(0x9fce83));ball(x-.2,3.63,-9.12,.18,m(0xc7dd8b));}
+ for(const [x,z,col] of [[-9,1.2,0xe4ae77],[9,1.2,0x80bdaf],[-9,-4.8,0xb7c6df],[9,-4.8,0xe8bc8d]]){cube(x,.1,z,.7,.12,1.4,m(col));cube(x,.85,z,.1,1.5,.1,timber);ball(x,1.66,z,.21,m(0xffe3a2));}
+ decorationSign('♻️ 餐廳減廢動線',-5.7,4.25,-9.45,3.8,'#e5f5dd','#35674a');
+ decorationSign('🌱 友善環境・安心服務',5.7,4.25,-9.45,4.2,'#fff2d8','#35674a');
+ // V26 FINAL: richly layered, immediately visible walkable storybook restaurant environment.
+ // Pastel canopy and timber beams frame the whole room without hiding the learning stations.
+ const pastel=[0xf8d5b8,0xc5e8d8,0xc7def1,0xf3e4a5,0xe6c9e8,0xb9dcd0];
+ for(let i=0;i<12;i++){
+   const x=-9.9+i*1.8;
+   cube(x,4.92,-9.35,1.65,.19,.72,m(pastel[i%pastel.length]));
+   cube(x,4.84,-8.93,.08,.32,.12,timber);
+ }
+ // Decorative scalloped bunting in front of the rear wall.
+ for(let i=0;i<19;i++){
+   const x=-9+i;
+   const pennant=new THREE.Mesh(new THREE.ConeGeometry(.22,.54,3),m(pastel[i%6]));
+   pennant.position.set(x,4.37+Math.sin(i*.6)*.09,-9.08);
+   pennant.rotation.z=Math.PI;
+   scene.add(pennant);
+ }
+ // Three welcoming pastel arches divide the work zones visually, leaving open walking paths.
+ for(const x of [-6,0,6]){
+   for(const dx of [-1.9,1.9])cube(x+dx,2.7,-8.95,.2,3.5,.25,m(0xe6b891));
+   cube(x,4.5,-8.95,4,.25,.3,m(0xf3cfa3));
+   for(let j=0;j<5;j++)ball(x-1.65+j*.83,4.53,-8.68,.17,m(pastel[(j+Math.round(x+6))%6]));
+ }
+ // Café style chalkboard menus with explanatory icons on the side walls.
+ for(const [x,z,words] of [[-10.46,-7.0,'清洗分類'],[-10.46,-2.0,'惜食減廢'],[10.46,-7.0,'循環餐具'],[10.46,-2.0,'安全節能']]){
+   cube(x,2.55,z,.18,1.75,2.65,timber);
+   decorationSign(words,x<0?x+.16:x-.16,2.55,z,2.15,'#e6f6dc','#365d4e');
+ }
+ // Bright overhead flower-and-leaf chandeliers, designed as small floating mobiles.
+ for(const [x,z] of [[-6,-1.5],[0,-1.5],[6,-1.5],[-6,-6.5],[0,-6.5],[6,-6.5]]){
+   cylinder(x,4.58,z,.028,.8,steel);
+   ball(x,4.16,z,.2,m(0xffe7a5));
+   for(let j=0;j<6;j++){
+     const a=j*Math.PI/3;
+     ball(x+Math.cos(a)*.36,4.17,z+Math.sin(a)*.36,.21,m(pastel[(j+Math.round(x+6))%6]));
+   }
+ }
+ // Distinct task-themed decorative dioramas beside, not on top of, the six mission points.
+ const props=[[-8.65,1.0,0],[-1.6,1.0,1],[8.6,1.0,2],[-8.65,-4.8,3],[-1.6,-4.8,4],[8.6,-4.8,5]];
+ for(const [x,z,k] of props){
+   cube(x,.23,z,1.0,.35,1.0,m(0xf2e2c9));
+   if(k===0){ // sorting: three miniature colored bins
+     for(let j=0;j<3;j++){cube(x+(j-1)*.3,.65,z,.26,.5,.3,m([0x77b3d9,0x8fc994,0xe8bc74][j]));cube(x+(j-1)*.3,.94,z,.31,.06,.35,dark)}
+   }else if(k===1){ // washing: basin and faucet
+     cube(x,.65,z,.75,.24,.64,steel);cube(x,.78,z,.6,.07,.5,blue);cylinder(x+.23,1.02,z-.2,.035,.48,steel);
+   }else if(k===2){ // equipment safety: warning beacon
+     cube(x,.65,z,.6,.55,.6,steel);ball(x,1.03,z,.2,m(0xf3bb69));
+   }else if(k===3){ // reusable containers
+     for(let j=0;j<3;j++)cube(x,.48+j*.21,z,.65,.16,.5,m(pastel[j]));
+   }else if(k===4){ // energy: glowing meter
+     cube(x,.78,z,.6,.8,.22,dark);cube(x,.89,z+.13,.42,.33,.05,m(0x9edfc1));
+   }else{ // food scraps and fresh herb
+     cube(x,.54,z,.65,.45,.6,green);for(let j=0;j<4;j++)ball(x+(j-1.5)*.14,.88,z,.13,m(0xa4d77d));
+   }
+ }
+ // A small colorful storybook garden along the outer edges of the playable area.
+ for(let i=0;i<22;i++){
+   const side=i%2?-9.95:9.95;
+   const z=-8.3+(Math.floor(i/2))*1.45;
+   cylinder(side,.2,z,.13,.4,m(0x8e6e52));
+   cylinder(side,.55,z,.045,.46,green);
+   for(let j=0;j<5;j++){
+     const a=j*Math.PI*2/5;
+     ball(side+Math.cos(a)*.19,.87,z+Math.sin(a)*.19,.13,m(pastel[(i+j)%6]));
+   }
+   ball(side,.87,z,.10,m(0xf9e5a0));
+ }
+ // Floating instructional wayfinding signs on back wall, high enough to avoid the markers.
+ decorationSign('🌼 歡迎來到花花餐旅・一起守護地球',0,4.83,-9.18,7.3,'#fff4e2','#366a55');
+ // Visual learning flow: circular reuse emblem, not a factory logo.
+ const ring=new THREE.Group();ring.position.set(0,2.9,-9.22);scene.add(ring);
+ const tor=new THREE.Mesh(new THREE.TorusGeometry(.35,.065,9,30),green);ring.add(tor);
+ recycleMotion.push({g:ring,decorSpin:true});
+}
+
+function animateRecycleV15(t){if(level!==2)return;for(const a of recycleMotion){if(a.decorSpin)a.g.rotation.z=t*.22}}
+let recycleState=null;
+// V16: evidence-based educational scenarios: decide, explain, retry, reflect, then earn points.
+const recycleLessons=[
+ {title:'♻️ 餐廳分類偵探',goal:'能辨識餐飲現場常見廢棄物並依當地規定分類',stages:[
+  {q:'客人喝完的鋁罐已倒空，服務人員應放在哪一區？',opts:['金屬容器回收區','廚餘區','乾淨紙類區'],a:0,why:'鋁罐屬金屬容器，倒空內容物後依所在地回收規範分類。'},
+  {q:'沾滿油污、無法清潔的餐巾紙，應該怎麼處理？',opts:['混入乾淨紙類回收','依當地規定作一般垃圾處理','投入金屬容器回收'],a:1,why:'嚴重油污會降低紙類回收品質，不應直接混入乾淨紙類。'},
+  {q:'外帶塑膠餐盒有回收標誌，就一定可以直接回收嗎？',opts:['是，不用看髒污或材質','否，要確認材質、清潔程度及當地規範','只要透明就可以'],a:1,why:'不同塑膠材質及收運制度要求不同；先清除食物殘渣並查詢當地規定。'}]},
+ {title:'🧼 回收前處理實驗',goal:'學會分離殘渣與容器，避免污染回收物',stages:[
+  {q:'客人留下半杯飲料，杯子要回收前先做什麼？',opts:['整杯直接丟回收桶','倒空飲料殘液','把杯子裝滿水'],a:1,why:'先倒空殘液，降低回收物污染；杯身及配件依材質和當地規範分類。'},
+  {q:'外帶紙餐盒還有大量飯菜，正確的處理順序？',opts:['連食物一起投入紙類回收','先分離食物殘渣，再判斷容器是否符合回收規定','整盒投入金屬回收'],a:1,why:'食物殘渣與包材應分開處理，容器能否回收仍取決於材質、髒污及地方規定。'},
+  {q:'餐廳新進員工不確定哪些紙容器可回收，最好怎麼做？',opts:['查看清潔隊公告與店內分類指引','全部丟同一桶','只看容器顏色'],a:0,why:'所在地公告與店內標準流程可以降低錯誤分類，並方便全體員工一致執行。'}]},
+ {title:'🦺 餐旅設備安全決策',goal:'學習清洗、壓縮及回收設備的安全操作與異常通報',stages:[
+  {q:'準備使用餐廳紙箱壓縮設備，發現安全防護罩未關好，你會？',opts:['趕快啟動以免耽誤工作','停止啟動，確認防護裝置並依規操作','請同事用手扶住防護罩'],a:1,why:'機械運轉前應完成安全檢查；不可為求速度忽略防護措施。'},
+  {q:'回收設備運轉中，塑膠袋卡在入口，最安全的做法？',opts:['伸手拉出來','依標準程序停機並通知授權人員處理','用腳踢進去'],a:1,why:'不可接觸運轉中的機械，須依停機、隔離能源及授權維護程序處理。'},
+  {q:'故障排除後要重新啟動設備，應先做什麼？',opts:['確認設備與人員安全，再依程序復機','直接按啟動鍵','讓沒有受訓的人試用'],a:0,why:'確認危險區無人、設備復原且由受訓人員依規定操作，才能安全恢復工作。'}]},
+ {title:'🔁 包裝循環再利用',goal:'理解餐旅包裝減量、重複使用與衛生管理的關係',stages:[
+  {q:'餐廳想減少外帶垃圾，哪個方案更符合循環理念？',opts:['所有餐點都加兩層包裝','提供符合衛生管理的可重複使用餐盒方案','每位顧客都多給三組餐具'],a:1,why:'重複使用方案須配合清洗消毒、回收與物流管理，才能兼顧衛生及減廢。'},
+  {q:'客人歸還循環杯，店員下一步應如何處理？',opts:['直接拿給下一位顧客','依店內衛生程序回收、清洗及消毒','只擦外面就繼續用'],a:1,why:'可重複使用餐具必須遵守衛生清潔流程，不能以環保為由犧牲食品安全。'},
+  {q:'餐廳採購一次性包裝時，最重要的考量是？',opts:['只看包裝漂亮不漂亮','評估必要性、材質、用量與當地處理方式','包裝越多越環保'],a:1,why:'先避免不必要的包裝，再考量可重複使用或妥善回收的方案。'}]},
+ {title:'⚡ 餐廳節能決策',goal:'依營業需求調整能源使用，同時維持食品安全與顧客需求',stages:[
+  {q:'打烊後備餐區無人使用，但工作燈仍全部亮著，你會？',opts:['在保留必要安全照明下關閉非必要燈具','把緊急照明一起關掉','完全不理會'],a:0,why:'非必要照明可關閉節能，但逃生、保全及必要安全設備不可任意停用。'},
+  {q:'冷藏庫裡仍有需低溫保存的食材，能否為省電直接關閉冰箱？',opts:['可以，省電最重要','不行，應維持食品安全溫度並改善開門及維護習慣','只要晚上就可以'],a:1,why:'食品安全優先，節能應透過設備維護、合理裝載與減少不必要開門等方式進行。'},
+  {q:'洗碗機只裝少量餐具就頻繁啟動，較好的做法？',opts:['依設備說明與衛生要求合理安排洗滌批次','為了省水不再清洗餐具','任意降低消毒要求'],a:0,why:'合理安排洗滌可降低水電耗用，但仍須符合衛生、消毒及營運需求。'}]},
+ {title:'🏆 永續餐廳實踐',goal:'整合採購、惜食、回收及友善服務，形成可執行的餐廳行動',stages:[
+  {q:'顧客外帶餐點，哪個做法最能減少不必要的一次性用品？',opts:['不詢問就附上所有餐具','先詢問需求，再提供必要用品或循環選項','每份都附兩倍餐具'],a:1,why:'依實際需求提供用品，可從源頭減量，也尊重顧客選擇。'},
+  {q:'餐廳今天有較多剩餘食材，下一步應先考量？',opts:['不管保存狀態全部混在一起','確認食安與保存狀態，再規劃合適使用或依規處理','直接送給客人不必確認'],a:1,why:'惜食必須以食品安全為前提；不可食用的部分應依規分類處理。'},
+  {q:'向新進同事介紹永續餐廳，哪句話最完整？',opts:['只要把垃圾分類就夠了','從適量採購、惜食、源頭減量、分類回收到友善服務一起實踐','只要設備越多越環保'],a:1,why:'永續餐旅是一套跨工作流程的決策，不只是回收，也包含食物、資源與人的照顧。'}]}
+];
+// V22: 18 individually authored, offline-safe visual scenes. No unrelated stock photographs.
+const exactScenes=[
+ [
+  ['🥫','已倒空的鋁罐','🥫 鋁罐','♻️ 金屬容器回收桶','鋁罐已倒空，請選擇正確分類區。'],
+  ['🧻','沾滿油污的餐巾紙','🧻 油污餐巾紙','📄 乾淨紙類回收桶','紙張有明顯油污，不能當作乾淨紙類。'],
+  ['🍱','有回收標誌的外帶塑膠餐盒','🍱 塑膠餐盒','🔎 材質・髒污・地方規定','有回收標誌仍須確認材質與清潔狀態。']
+ ],[
+  ['🥤','剩下半杯飲料的杯子','🥤 半杯飲料','♻️ 回收容器','杯內還有飲料，回收前先處理殘液。'],
+  ['🍚','裝有飯菜的外帶紙餐盒','🍱 餐盒＋飯菜','🗑️ 食物殘渣分類','餐盒與食物殘渣尚未分離。'],
+  ['📋','新進員工查看分類規定','👩‍🍳 新進員工','📋 店內分類指引','不確定紙容器如何回收，先查規範。']
+ ],[
+  ['⚙️','紙箱壓縮機防護罩未關好','⚙️ 紙箱壓縮機','⚠️ 防護罩開啟','設備防護罩尚未關妥，不能直接啟動。'],
+  ['🛑','運轉中的回收設備入口卡住塑膠袋','⚙️ 運轉中設備','🛍️ 塑膠袋卡住入口','設備仍在運轉，切勿伸手排除。'],
+  ['🔧','故障排除後的設備復機檢查','🔧 故障已排除','🦺 人員與設備安全檢查','重新啟動前先確認設備與周圍人員安全。']
+ ],[
+  ['🍱','餐廳提供循環外帶餐盒','🍱 可重複使用餐盒','🧼 清洗消毒流程','重複使用方案須搭配清潔與回收管理。'],
+  ['🥛','顧客歸還使用過的循環杯','🥛 歸還的循環杯','🧼 清洗・消毒區','歸還的杯子不可直接提供下一位顧客。'],
+  ['📦','採購一次性餐飲包裝','📦 一次性包裝','📋 用量・材質・必要性','採購前評估包裝需求與後續處理。']
+ ],[
+  ['💡','打烊後無人的備餐區仍亮燈','🌙 打烊後備餐區','💡 工作燈仍亮著','無人使用的工作區，仍須保留必要安全照明。'],
+  ['🧊','冰箱內仍有需要冷藏的食材','🧊 冷藏冰箱','🥬 需低溫保存的食材','冰箱裡有食材，不能為了省電直接關機。'],
+  ['🍽️','洗碗機只裝少量餐具就啟動','🍽️ 少量待洗餐具','🫧 商用洗碗機','洗碗批次應兼顧衛生與能源效率。']
+ ],[
+  ['🥡','顧客外帶餐點與一次性餐具','🥡 外帶餐點','🥢 一次性餐具','先確認顧客是否需要餐具。'],
+  ['🥬','餐廳剩餘食材待檢查保存狀態','🥬 剩餘食材','🌡️ 食安與保存檢查','剩餘食材要先確認食安及保存狀態。'],
+  ['👩‍🍳','向新進同事介紹永續餐廳流程','👩‍🍳 新進同事','🌱 採購・惜食・減廢・友善','永續餐旅需要完整流程，不只是垃圾分類。']
+ ]
+];
+function cuteSceneSVG(n,step){
+ const [emoji,title,object,context,note]=exactScenes[n][step];
+ const id=`v24${n}${step}`;
+ const palettes=[['#fff0d9','#ffd7b6','#c3e5c4'],['#e4f8f0','#b9e7df','#f4d4b9'],['#e9edff','#c8d5fa','#ffdbad'],['#fff0ed','#f7c8d0','#c4e8d4'],['#e5f5ff','#bcddec','#ffe3ac'],['#fff5db','#ffe0b3','#c5e8ce']];
+ const [bg,accent,leaf]=palettes[n];
+ const R=(x,y,w,h,fill,rx=9,stroke='#ad9c8e',sw=2)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}" stroke="${stroke}" stroke-width="${sw}"/>`;
+ const T=(x,y,t,size=15,color='#566c5b')=>`<text x="${x}" y="${y}" font-size="${size}" text-anchor="middle" fill="${color}" font-weight="700">${t}</text>`;
+ const E=(x,y,e,size=44)=>`<text x="${x}" y="${y}" font-size="${size}" text-anchor="middle">${e}</text>`;
+ const bin=(x,y,label,color='#8bc8a6')=>R(x,y,74,88,color,9,'#619b84',3)+R(x-5,y-8,84,13,'#e9f8f2',6,'#619b84',2)+T(x+37,y+48,label,13,'#315d50');
+ const counter=R(38,197,288,20,'#d9aa86',7,'#b98160',3)+R(55,215,16,53,'#c58f73',3,'#b98160',1)+R(291,215,16,53,'#c58f73',3,'#b98160',1);
+ const fridge=R(74,75,160,185,'#e8f8ff',17,'#76b2c3',5)+R(84,85,140,81,'#c5e9f0',9,'#91c8d1',2)+R(84,173,140,75,'#e2f7f9',9,'#91c8d1',2)+R(205,108,8,37,'#80b5c1',4,'#80b5c1',1)+R(205,192,8,35,'#80b5c1',4,'#80b5c1',1);
+ const machine=R(59,89,248,161,'#c6d8ed',18,'#6c8fac',5)+R(83,110,192,81,'#edf6ff',11,'#8eaac2',3)+R(94,206,167,25,'#8ba9c5',8,'#7294b0',2);
+ const washing=R(72,119,243,132,'#d6e7e8',16,'#87adb5',4)+R(89,137,207,75,'#f7fdff',11,'#a2c3c8',3)+R(107,221,175,17,'#93c5cc',7,'#80b0b7',2);
+ let scene='';
+ switch(n*3+step){
+ case 0: scene=counter+bin(228,103,'金屬')+E(113,183,'🥫',61)+E(171,176,'✨',25);break;
+ case 1: scene=counter+bin(226,103,'一般垃圾','#e9b5a8')+E(113,187,'🧻',61)+E(174,168,'🟤',29);break;
+ case 2: scene=counter+bin(235,107,'待確認','#e7d1a1')+E(123,183,'🍱',61)+E(176,167,'🔎',32);break;
+ case 3: scene=counter+E(117,185,'🥤',70)+E(184,186,'💧',38)+bin(231,106,'容器');break;
+ case 4: scene=counter+E(118,186,'🍱',61)+E(190,179,'🍚',46)+bin(237,107,'廚餘','#d9c19b');break;
+ case 5: scene=counter+R(67,100,125,88,'#fffdf6',8,'#d2ad80',3)+T(130,129,'分類指引',17)+E(126,176,'📋',40)+E(236,182,'👩‍🍳',63);break;
+ case 6: scene=machine+R(92,116,169,71,'#ffe8d3',9,'#e3a96c',4)+T(174,154,'防護罩開啟',17,'#a75e42')+E(172,190,'⚠️',43);break;
+ case 7: scene=machine+E(170,170,'🛍️',65)+E(270,121,'🛑',37)+T(177,221,'運轉中',15,'#a44e48');break;
+ case 8: scene=machine+E(162,169,'🔧',58)+E(248,150,'🦺',43)+T(168,221,'安全檢查',16);break;
+ case 9: scene=counter+E(106,183,'🍱',58)+E(174,176,'♻️',43)+E(253,174,'🧼',46);break;
+ case 10: scene=washing+E(131,194,'🥛',58)+E(211,192,'🫧',48)+E(263,188,'✨',29);break;
+ case 11: scene=counter+E(109,179,'📦',60)+E(186,172,'📋',50)+E(260,176,'♻️',37);break;
+ case 12: scene=R(58,101,246,145,'#f8e8c9',14,'#caa88a',4)+R(79,120,204,85,'#c2d7dc',9,'#9bb4b9',3)+E(121,179,'💡',54)+E(220,177,'🌙',52)+T(181,225,'打烊備餐區',16);break;
+ case 13: scene=fridge+E(128,145,'🥬',43)+E(176,144,'🥛',32)+E(151,225,'🥕',40)+E(276,169,'🌡️',47);break;
+ case 14: scene=washing+E(126,193,'🍽️',60)+E(222,187,'🫧',48)+T(195,244,'少量餐具',15);break;
+ case 15: scene=counter+E(109,185,'🥡',61)+E(185,180,'🥢',50)+E(264,173,'❓',38);break;
+ case 16: scene=fridge+E(136,147,'🥬',48)+E(166,222,'🍅',42)+E(270,173,'🌡️',48);break;
+ case 17: scene=R(54,96,259,146,'#fffdf5',15,'#cba886',4)+T(180,125,'永續餐旅流程',18)+E(107,188,'🥬',40)+E(174,188,'🍽️',40)+E(247,188,'♻️',40)+T(180,222,'採購 → 惜食 → 減廢',15);break;
+ }
+ const character=`<g transform="translate(356 84)"><ellipse cx="56" cy="176" rx="49" ry="11" fill="#749e88" opacity=".2"/><path d="M25 106Q54 85 89 106L92 160Q58 179 22 160Z" fill="#88c5ae" stroke="#548e77" stroke-width="3"/><path d="M23 118L4 137M91 118L109 133" stroke="#548e77" stroke-width="9" stroke-linecap="round"/><path d="M40 165L37 177M75 165L78 177" stroke="#548e77" stroke-width="9" stroke-linecap="round"/><circle cx="56" cy="62" r="47" fill="#ffdfc2" stroke="#e6b18f" stroke-width="3"/><path d="M10 60Q2 4 52 9Q101 4 103 60Q82 38 61 34Q32 51 10 60" fill="#69504d"/><path d="M10 25Q57 -7 103 25" stroke="#fff7e9" stroke-width="14" fill="none" stroke-linecap="round"/><ellipse cx="39" cy="67" rx="4" ry="6" fill="#504341"/><ellipse cx="75" cy="67" rx="4" ry="6" fill="#504341"/><ellipse cx="27" cy="81" rx="12" ry="6" fill="#f4a4a3" opacity=".7"/><ellipse cx="87" cy="81" rx="12" ry="6" fill="#f4a4a3" opacity=".7"/><path d="M44 86Q56 98 69 86" fill="none" stroke="#bd7779" stroke-width="3" stroke-linecap="round"/><path d="M41 118L73 118" stroke="#f7f9e9" stroke-width="7" stroke-linecap="round"/></g>`;
+ // V25: richly furnished storybook restaurant interiors, while keeping each task object unobstructed.
+ const shelfDecor=[
+  ['🥫','🧃','📦'],['🧽','🫧','🧴'],['🦺','⚙️','🧰'],
+  ['🥤','🍶','🧺'],['💡','🌿','🔌'],['🥬','🍽️','♻️']
+ ][n];
+ const frameFill=['#f6c7b1','#b5e1d4','#c6d3f0','#f2c3cc','#b9d8ec','#f2dcaa'][n];
+ const backgroundRoom=`<g opacity=".98">
+  <path d="M0 64H500M0 116H500" stroke="#ffffff" stroke-width="2" opacity=".35"/>
+  <path d="M0 237H500" stroke="#a7bdab" stroke-width="7"/>
+  <rect x="14" y="65" width="108" height="89" rx="12" fill="#fffdf7" stroke="#c59e7b" stroke-width="5"/>
+  <rect x="22" y="73" width="92" height="73" rx="7" fill="#c8e9ef"/>
+  <path d="M68 74V146M22 111H114" stroke="#fffaf0" stroke-width="7"/>
+  <path d="M22 140Q40 115 57 131T95 123L114 137V146H22Z" fill="#8dc8a0"/>
+  <circle cx="102" cy="89" r="11" fill="#fff4bd"/>
+  <rect x="311" y="68" width="177" height="89" rx="12" fill="#fff9ef" stroke="#d5b99b" stroke-width="4"/>
+  <path d="M323 105H475M323 142H475" stroke="#bd9371" stroke-width="8" stroke-linecap="round"/>
+  ${shelfDecor.map((e,i)=>E(341+i*57,99,e,28)).join('')}
+  ${shelfDecor.map((e,i)=>E(341+i*57,137,['🪴','🧺','✨'][i],24)).join('')}
+  <path d="M149 64V85M257 64V85" stroke="#947d67" stroke-width="4"/>
+  <ellipse cx="149" cy="89" rx="26" ry="10" fill="#ffe4a5" stroke="#e5b77c" stroke-width="3"/>
+  <ellipse cx="257" cy="89" rx="26" ry="10" fill="#ffe4a5" stroke="#e5b77c" stroke-width="3"/>
+  <path d="M149 98V110M257 98V110" stroke="#fff4ce" stroke-width="2" opacity=".7"/>
+  <rect x="22" y="164" width="72" height="34" rx="12" fill="${frameFill}" stroke="#cfa68e" stroke-width="3"/>
+  <text x="58" y="186" font-size="15" font-weight="bold" fill="#675949" text-anchor="middle">永續餐旅</text>
+ </g>`;
+ const foregroundDecor=`<g pointer-events="none">
+  <ellipse cx="31" cy="269" rx="27" ry="7" fill="#6e9f7e" opacity=".19"/>
+  <path d="M18 250L13 223L43 223L39 250Z" fill="#e4b38b" stroke="#b78564" stroke-width="3"/>
+  <path d="M29 225Q4 208 12 186Q31 188 30 217Q32 187 52 188Q56 211 31 225" fill="#7cbf93" stroke="#559b70" stroke-width="3"/>
+  <circle cx="16" cy="204" r="5" fill="#f8cf78"/><circle cx="47" cy="203" r="5" fill="#f2b0b8"/>
+  <path d="M450 270H486" stroke="#ae8e70" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="465" cy="257" r="8" fill="#f8ce83"/><circle cx="480" cy="260" r="7" fill="#f5afae"/>
+  <path d="M462 269V245M480 269V247" stroke="#6ba47d" stroke-width="3"/>
+ </g>`;
+ const sparkle=`<g fill="#fff9df" opacity=".95"><path d="M31 83l5 13 13 5-13 5-5 13-5-13-13-5 13-5z"/><path d="M445 29l4 9 9 4-9 4-4 9-4-9-9-4 9-4z"/></g>`;
+ return `<svg class="cute-lesson-svg" viewBox="0 0 500 290" role="img" aria-label="第${n+1}工作站第${step+1}題：${title}" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop stop-color="${bg}"/><stop offset="1" stop-color="#fffefa"/></linearGradient><filter id="sh${id}"><feDropShadow dx="0" dy="5" stdDeviation="5" flood-color="#846b53" flood-opacity=".16"/></filter></defs><rect width="500" height="290" rx="22" fill="url(#${id})"/><path d="M0 238Q250 218 500 238V290H0Z" fill="${leaf}"/><path d="M0 246H500" stroke="#9ac9ad" stroke-width="3"/><circle cx="452" cy="62" r="32" fill="#fff" opacity=".55"/><path d="M23 229V180" stroke="#7aab8c" stroke-width="6"/><ellipse cx="11" cy="191" rx="20" ry="9" transform="rotate(-25 11 191)" fill="#8dcea0"/><ellipse cx="38" cy="199" rx="20" ry="9" transform="rotate(25 38 199)" fill="#8dcea0"/>${backgroundRoom}<g filter="url(#sh${id})">${scene}</g>${character}${foregroundDecor}${sparkle}<rect x="15" y="12" width="315" height="45" rx="20" fill="#fffdf8" stroke="${accent}" stroke-width="3"/>${T(171,41,title,17,'#486e5a')}<rect x="342" y="12" width="142" height="34" rx="17" fill="#fffdf8" stroke="${accent}" stroke-width="2"/>${T(413,34,`任務 ${n+1}-${step+1}`,15,'#567e67')}</svg>`;
+}
+function matchedVisualHTML(n,step){
+ const [emoji,title,object,context,note]=exactScenes[n][step];
+ return `<div class="real-photo cute-scene" role="group" aria-label="本題專屬可愛風情境插畫：${title}"><div class="cute-scene-stage">${cuteSceneSVG(n,step)}</div><div class="photo-caption"><strong>🔍 圖中關鍵線索</strong>${note}</div><div class="photo-tip">精緻童話風專屬情境插畫，非實景照片；離線也能顯示。</div></div>`;
+}
+const stageObservations=[
+ ['先觀察分類區的標示，再思考餐廳物品的回收方式。','想一想：容器回收前需要做哪些處理？','看看有沒有食物殘渣污染回收物。'],
+ ['觀察工作檯：哪些容器可能留有殘液？','飲料杯裡還有飲料時，應先做什麼？','餐盒沾有食物殘渣時，如何避免污染其他回收物？'],
+ ['觀察設備：啟動前需要注意哪些安全風險？','設備卡住時，為什麼不能直接伸手處理？','維修設備前，哪些安全步驟不能省略？'],
+ ['哪些包裝能重複使用？如何兼顧衛生？','循環餐盒需要哪些清洗消毒措施？','如何在不影響食品安全下減少一次性包裝？'],
+ ['觀察照明：哪些燈具在打烊後可以安全關閉？','觀察冷藏設備：為什麼不能為了省電而關閉冰箱？','觀察冷藏庫：如何減少開門造成的能源浪費？'],
+ ['如何同時照顧環境與不同顧客的需要？','餐廳採購與備餐如何減少浪費？','怎麼兼顧環保與友善服務？']
+];
+const observationPrompts=[
+ '找找看：現場是否有清楚的分類標示？分類前還要確認哪些條件？',
+ '觀察工作檯：哪些容器可能留有殘液或食物殘渣？',
+ '觀察設備與工作環境：啟動前需要注意哪些安全風險？',
+ '想一想：哪些包裝可以重複使用？如何兼顧衛生？',
+ '觀察照明與設備：哪些節能措施不會影響食品安全？',
+ '觀察餐廳服務：怎麼同時照顧環境與不同顧客的需要？'
+];
+function recycleMiniStart(n){
+ locked=true;
+ const lesson=recycleLessons[n];
+ let step=0,wrong=0,selected=null;
+ showModal(`<h2>${lesson.title}</h2><p>🎯 學習目標：${lesson.goal}</p><div id="recycleGame"></div><button type="button" id="recycleExit" class="secondary">返回餐旅實驗室</button>`);
+ $('recycleExit').onclick=()=>{locked=false;$('overlay').classList.add('hidden')};
+ const area=$('recycleGame');
+ function render(){
+  selected=null;
+  const s=lesson.stages[step];
+  area.innerHTML=`<div class="mini-stage"><div class="lesson-hero"><div><div class="lesson-step">🎯 情境任務 ${step+1}／${lesson.stages.length}</div><div class="lesson-counter">觀察現場 → 做出決策 → 理解原因</div></div><span aria-label="學習進度">${Math.round((step+1)/lesson.stages.length*100)}%</span></div><div class="lesson-progress"><div style="width:${(step+1)/lesson.stages.length*100}%"></div></div><div class="lesson-layout"><div class="lesson-visual">${matchedVisualHTML(n,step)}<div class="observe-note"><strong>🔍 現場觀察任務</strong><div>${stageObservations[n][step]}</div></div><div class="lesson-tags"><span>🖼️ 本題專屬情境圖</span><span>🌱 餐旅永續</span></div></div><div class="lesson-decision"><div style="font-size:12px;color:#64816e;font-weight:bold">👩‍🍳 你是餐廳永續管理員，請做出選擇</div><h3>${s.q}</h3><div class="mini-grid" id="lessonOptions">${s.opts.map((o,i)=>`<button type="button" class="mini-tile" data-choice="${i}"><b style="color:#26784b">${String.fromCharCode(65+i)}.</b> ${o}</button>`).join('')}</div><div id="lessonFeedback" class="lesson-feedback" aria-live="polite"></div><div id="lessonNav" class="lesson-actions" style="margin-top:12px"></div></div></div></div>`;
+  area.querySelectorAll('[data-choice]').forEach(btn=>btn.onclick=()=>{
+   if(selected!==null)return;
+   const i=Number(btn.dataset.choice),correct=i===s.a;
+   if(!correct)wrong++;
+   selected=i;
+   area.querySelectorAll('[data-choice]').forEach(b=>{b.disabled=true;b.style.opacity=Number(b.dataset.choice)===s.a?'1':'.65';if(Number(b.dataset.choice)===s.a)b.style.border='3px solid #31815c'});
+   $('lessonFeedback').innerHTML=`<div style="font-size:13px;color:#547463">📘 即時學習回饋</div><strong style="color:${correct?'#26784b':'#a64d31'}">${correct?'✅ 判斷正確！':'🔎 這個選擇需要調整。'}</strong><p><strong>為什麼？</strong>${s.why}</p>`;
+   const nav=$('lessonNav');
+   const next=document.createElement('button');next.type='button';next.className='mini-primary';next.style.cssText='display:block;width:100%;padding:16px;font-size:19px;background:#287c56;color:white;border:0;border-radius:12px';
+   next.textContent=correct?(step===2?'📘 查看學習成果':'➡️ 我理解了，進入下一個情境'):'🔁 理解原因後，重新判斷';
+   nav.appendChild(next);
+   next.onclick=()=>{if(!correct){render();return}step++;if(step<lesson.stages.length)render();else summary()};
+  });
+ }
+ function summary(){
+  area.innerHTML=`<div class="lesson-result"><h3>🎓 完成「${lesson.title}」</h3><p>你完成了 ${lesson.stages.length} 個情境，練習了「觀察 → 判斷 → 理解 → 修正」。</p><p>需要重新思考的次數：<b>${wrong}</b> 次（不扣分）</p><p><strong>帶回生活的行動：</strong>${lesson.goal}。</p><p>💡 <strong>實踐提醒：</strong>在真實餐廳應依所在地規範、現場設備說明及安全程序執行。</p><p style="color:#547364">學習成果是理解並做出正確選擇，而不是只按按鈕。</p><button id="lessonClaim" type="button" class="mini-primary" style="padding:16px;width:100%;font-size:19px">🏅 完成學習・領取100分</button></div>`;
+  $('lessonClaim').onclick=()=>{recycleState=null;answer(n,0)};
+ }
+ render();
+}
+
+// V27: richly furnished inclusive restaurant, with actual scenario decision steps.
+function buildCareV27(){
+ const mint=M(0xa9d9bc),pink=M(0xf7b7b0),cream=M(0xffe6ae),dark=M(0x42624f),teal=M(0x6ba5a0);
+ // Open welcoming facade and windows
+ for(const x of [-10.4,10.4]){cube(x,2,-2,.35,4,16,M(0xf4d9c1));for(const z of [-7,-3,1,5]){cube(x,3.2,z,.42,.35,1.2,cream)}}
+ for(const x of [-8,-4,0,4,8]){cube(x,3.95,-9.6,1.5,.17,.35,pink);ball(x,3.95,-9.25,.17,cream)}
+ for(const x of [-7.5,7.5]){cube(x,1.8,-9.5,2.8,2.2,.18,teal);cube(x,1.8,-9.35,2.4,1.85,.09,M(0xd5f4ee));cube(x,1.8,-9.26,.12,2,.14,cream)}
+ // Reception counter, accessible menu and take-away service shelf
+ cube(0,.78,-7.8,4.6,1.55,.95,M(0xb67f59));cube(0,1.6,-7.8,4.9,.14,1.1,cream);
+ decorationSign('💚 歡迎每一位顧客',0,2.85,-9.4,4.4,'#fff1dc','#406e56');
+ decorationSign('大字菜單・友善服務',-6,2.25,-9.42,3.7,'#fff8e9','#426b5b');
+ // Accessible path: wide open, clearly visible, no obstacles
+ cube(0,-.001,4.2,3.1,.025,9.8,M(0xd8e9cc));
+ for(const z of [-.2,2.4,5.0,7.5]){cube(-1.4,.015,z,.11,.018,.8,cream);cube(1.4,.015,z,.11,.018,.8,cream)}
+ // cozy dining tables and chairs, positioned outside central route
+ for(const [x,z] of [[-7,2],[-6,-5],[6,1],[6,-5]]){
+  cylinder(x,.83,z,1.05,.16,M(0xd0a17b));cylinder(x,.38,z,.12,.75,dark);
+  for(const dx of [-1.6,1.6]){cube(x+dx,.49,z,.8,.15,.8,teal);cube(x+dx,.95,z+(dx<0?-.37:.37),.8,.95,.15,mint)}
+  cylinder(x,.96,z,.14,.18,cream);ball(x,1.12,z,.13,pink)
+ }
+ // Accessible seat and wheelchair symbol
+ cube(8,.07,4,2.4,.06,2.4,M(0xe0f2df));decorationSign('♿ 無障礙座位',7.2,1.8,6.8,2.8,'#eaf8e8','#33694d');
+ // Warm hanging lamps
+ for(const x of [-8,-3,3,8]){cylinder(x,3.65,-1.5,.04,.55,dark);ball(x,3.3,-1.5,.33,cream)}
+ // Flower beds on edges
+ for(const x of [-9.5,9.5])for(const z of [-7,-4,0,3,7]){cylinder(x,.27,z,.28,.5,M(0xba835b));ball(x,.75,z,.37,mint);ball(x-.22,1,z,.15,pink);ball(x+.18,.96,z,.15,cream)}
+ // Gentle role labels, one for each task
+ const signs=[['♿ 暢通動線',6,3],['📖 自主點餐',-5,-2],['🤝 同理協助',2,-3],['💬 清楚溝通',-7,5],['🥗 安全飲食',6,-5],['👨‍👩‍👧 世代共融',0,6]];
+ signs.forEach(([t,x,z])=>decorationSign(t,x,1.95,z,2.3,'#fff9e8','#3a6b52'));
+}
+const careScenes=[
+ {icon:'♿',place:'餐廳入口・無障礙動線',intro:'輪椅使用者準備進入餐廳，但通道旁放了雜物。',observe:'觀察：通道是否暢通？是否需要先詢問顧客？',follow:'顧客表示想自行前進，服務人員接下來應該？',opts:['尊重其意願，保持通道暢通並在需要時協助','堅持推動輪椅','請顧客改天再來'],a:0,why:'無障礙不只是硬體，也包含尊重使用者的自主選擇。'},
+ {icon:'📖',place:'餐桌旁・大字菜單',intro:'長者閱讀一般菜單時有些吃力，服務人員走到桌邊。',observe:'觀察：顧客需要的是資訊可近性，而不是被代替做決定。',follow:'長者拿到大字菜單後仍想慢慢選，應該？',opts:['催促趕快點餐','給予合理時間並告知有需要可協助','直接詢問家屬代點'],a:1,why:'尊重自主就是提供足夠資訊、時間與選擇。'},
+ {icon:'🤝',place:'溫馨用餐區・入座協助',intro:'一位行動較慢的長者正準備坐下，服務人員在旁協助。',observe:'觀察：不要未經同意直接碰觸或拉扶顧客。',follow:'如果長者說「我可以自己來」，你會？',opts:['仍強行扶住','嘲笑動作慢','尊重其選擇，在旁維持安全並適時詢問'],a:2,why:'同理心不是替別人決定，而是提供對方真正需要的支持。'},
+ {icon:'💬',place:'服務櫃台・友善溝通',intro:'聽力較弱的顧客希望了解套餐內容。',observe:'觀察：面對顧客說話、確認需求，可搭配清楚文字。',follow:'如果顧客還是沒聽清楚，怎麼做？',opts:['只提高音量大喊','詢問是否偏好文字或其他溝通方式','直接忽略問題'],a:1,why:'友善溝通需要因應個別需求，不預設所有人都一樣。'},
+ {icon:'🥗',place:'點餐櫃台・過敏原確認',intro:'顧客告知對花生過敏，正在確認餐點成分。',observe:'觀察：不能僅憑外觀判斷食物是否含有過敏原。',follow:'如果廚房無法確認是否有交叉接觸風險，應該？',opts:['坦誠告知風險，協助選擇可確認安全的選項','說絕對沒問題直接出餐','不告知顧客'],a:0,why:'食品安全與資訊透明同樣是友善服務的一部分。'},
+ {icon:'👨‍👩‍👧',place:'共融活動桌・老幼交流',intro:'餐廳舉辦老幼共融活動，參與者的體力與興趣不同。',observe:'觀察：每個人都應有選擇參與方式與拒絕的權利。',follow:'如果有長者不想參與手作，應該？',opts:['強迫參加','提供觀賞、聊天或其他自願參與方式','請對方離開活動'],a:1,why:'真正的共融是創造多元參與機會，而不是要求所有人做一樣的事。'}
+];
+// V29: each service question has a literal, locally rendered illustration of the situation.
+function careSituationArt(n,phase){
+ const shapes=[
+ // Accessible aisle: wheelchair and obstruction, then cleared aisle.
+ [`<rect x="35" y="166" width="88" height="36" rx="9" fill="#cb986b"/><rect x="48" y="135" width="62" height="37" rx="9" fill="#e5ae7b"/><circle cx="203" cy="202" r="39" fill="#e8f7fb" stroke="#497f98" stroke-width="9"/><circle cx="203" cy="202" r="8" fill="#497f98"/><path d="M188 116v50h53l24 36" fill="none" stroke="#497f98" stroke-width="11" stroke-linecap="round"/><circle cx="184" cy="93" r="22" fill="#f5c5a4"/><path d="M183 117l10 46" stroke="#558eac" stroke-width="22"/><rect x="310" y="190" width="55" height="48" rx="7" fill="#b88055"/><path d="M314 196l45 36m0-36l-45 36" stroke="#f7dbac" stroke-width="5"/>`,
+ `<rect x="35" y="166" width="88" height="36" rx="9" fill="#cb986b"/><circle cx="195" cy="202" r="39" fill="#e8f7fb" stroke="#497f98" stroke-width="9"/><circle cx="195" cy="202" r="8" fill="#497f98"/><path d="M180 116v50h53l24 36" fill="none" stroke="#497f98" stroke-width="11" stroke-linecap="round"/><circle cx="176" cy="93" r="22" fill="#f5c5a4"/><path d="M175 117l10 46" stroke="#558eac" stroke-width="22"/><path d="M292 180l18 18 39-45" fill="none" stroke="#429b6c" stroke-width="10" stroke-linecap="round"/>`],
+ // Elder reading large print menu.
+ [`<ellipse cx="170" cy="228" rx="122" ry="22" fill="#c18c69"/><rect x="145" y="159" width="135" height="75" rx="8" fill="#fff9e9" stroke="#ad8264" stroke-width="5"/><path d="M161 178h100m-100 13h74m-74 13h91" stroke="#7b6e5f" stroke-width="4"/><circle cx="102" cy="105" r="31" fill="#f1c7a8"/><path d="M78 91q25-42 52 0" fill="#bcb4ae"/><path d="M101 135v65" stroke="#a782ba" stroke-width="33"/><circle cx="340" cy="106" r="27" fill="#f6cba7"/><path d="M339 137v62" stroke="#76b69a" stroke-width="30"/>`,
+ `<ellipse cx="170" cy="228" rx="122" ry="22" fill="#c18c69"/><rect x="138" y="143" width="147" height="87" rx="8" fill="#fff9e9" stroke="#ad8264" stroke-width="5"/><text x="153" y="171" font-size="20" font-weight="bold" fill="#506a59">大字菜單</text><path d="M153 187h113m-113 21h90" stroke="#506a59" stroke-width="8"/><circle cx="95" cy="106" r="30" fill="#f1c7a8"/><path d="M72 92q25-42 51 0" fill="#bcb4ae"/><path d="M95 136v65" stroke="#a782ba" stroke-width="32"/><circle cx="343" cy="105" r="26" fill="#f6cba7"/><path d="M342 136v62" stroke="#76b69a" stroke-width="30"/>`],
+ // Slow-seating elder and chair, hands off.
+ [`<rect x="240" y="151" width="102" height="14" rx="5" fill="#c18c69"/><rect x="250" y="165" width="12" height="77" fill="#a87754"/><rect x="320" y="165" width="12" height="77" fill="#a87754"/><rect x="319" y="95" width="20" height="68" rx="7" fill="#d8a478"/><circle cx="150" cy="93" r="28" fill="#f1c7a8"/><path d="M129 81q22-34 45 0" fill="#bbb4ae"/><path d="M151 121l17 64-20 52" fill="none" stroke="#9d86b5" stroke-width="26" stroke-linecap="round"/><path d="M174 177l47 12" stroke="#f1c7a8" stroke-width="13"/><circle cx="380" cy="97" r="23" fill="#f4c4a1"/><path d="M380 120v80" stroke="#6aaf96" stroke-width="26"/>`,
+ `<rect x="240" y="151" width="102" height="14" rx="5" fill="#c18c69"/><rect x="250" y="165" width="12" height="77" fill="#a87754"/><rect x="320" y="165" width="12" height="77" fill="#a87754"/><rect x="319" y="95" width="20" height="68" rx="7" fill="#d8a478"/><circle cx="157" cy="93" r="28" fill="#f1c7a8"/><path d="M136 81q22-34 45 0" fill="#bbb4ae"/><path d="M157 121l18 64-19 52" fill="none" stroke="#9d86b5" stroke-width="26" stroke-linecap="round"/><circle cx="380" cy="97" r="23" fill="#f4c4a1"/><path d="M380 120v80" stroke="#6aaf96" stroke-width="26"/><path d="M215 67q32-31 64 0" fill="none" stroke="#5a9b75" stroke-width="5"/><text x="224" y="56" font-size="15" fill="#397a5a">我自己來</text>`],
+ // Hearing support: counter and menu, then written communication.
+ [`<rect x="65" y="176" width="330" height="67" rx="10" fill="#c68c65"/><circle cx="128" cy="111" r="29" fill="#f1c7a8"/><path d="M128 141v36" stroke="#b69ac5" stroke-width="30"/><circle cx="327" cy="111" r="28" fill="#f3c5a3"/><path d="M327 140v36" stroke="#78b7a0" stroke-width="29"/><path d="M190 90q37-28 74 0" stroke="#5a8bb0" stroke-width="5" fill="none"/><path d="M196 107q31-19 61 0" stroke="#5a8bb0" stroke-width="4" fill="none"/>`,
+ `<rect x="65" y="176" width="330" height="67" rx="10" fill="#c68c65"/><circle cx="128" cy="111" r="29" fill="#f1c7a8"/><path d="M128 141v36" stroke="#b69ac5" stroke-width="30"/><circle cx="327" cy="111" r="28" fill="#f3c5a3"/><path d="M327 140v36" stroke="#78b7a0" stroke-width="29"/><rect x="184" y="122" width="92" height="62" rx="7" fill="#fffdf1" stroke="#7faaa0" stroke-width="4"/><text x="196" y="145" font-size="14" fill="#496b65">今日套餐</text><path d="M196 155h66m-66 13h52" stroke="#6b8277" stroke-width="4"/>`],
+ // Peanut allergy, food ingredient confirmation.
+ [`<rect x="55" y="173" width="350" height="67" rx="9" fill="#c48b65"/><ellipse cx="229" cy="188" rx="76" ry="23" fill="#fff9f2" stroke="#b5c8b4" stroke-width="5"/><circle cx="213" cy="184" r="15" fill="#7ab66f"/><circle cx="240" cy="186" r="12" fill="#e4a36b"/><circle cx="112" cy="108" r="26" fill="#f2c5a3"/><path d="M112 136v37" stroke="#b69ac5" stroke-width="27"/><circle cx="345" cy="107" r="26" fill="#f2c5a3"/><path d="M345 136v37" stroke="#78b7a0" stroke-width="27"/><path d="M214 55l15 27h-30z" fill="#f1b05b"/><text x="209" y="76" font-size="17" fill="#7c4e25">!</text>`,
+ `<rect x="55" y="173" width="350" height="67" rx="9" fill="#c48b65"/><rect x="169" y="105" width="123" height="85" rx="8" fill="#fffaf1" stroke="#8aa69a" stroke-width="4"/><text x="183" y="128" font-size="16" fill="#476e5c">過敏原確認</text><path d="M183 143h91m-91 13h76" stroke="#88a69a" stroke-width="5"/><path d="M242 168l11 10 20-23" fill="none" stroke="#419b6a" stroke-width="6"/><circle cx="105" cy="107" r="25" fill="#f2c5a3"/><path d="M105 135v38" stroke="#b69ac5" stroke-width="27"/><circle cx="348" cy="107" r="25" fill="#f2c5a3"/><path d="M348 135v38" stroke="#78b7a0" stroke-width="27"/>`],
+ // Mixed-age table, then optional activities.
+ [`<ellipse cx="230" cy="200" rx="142" ry="31" fill="#c18c69"/><circle cx="92" cy="126" r="28" fill="#f0c5a5"/><path d="M91 153v49" stroke="#ad98c8" stroke-width="31"/><circle cx="365" cy="132" r="23" fill="#f0c5a5"/><path d="M365 157v44" stroke="#78b7a0" stroke-width="25"/><circle cx="214" cy="106" r="21" fill="#f0c5a5"/><path d="M214 127v53" stroke="#f0b66b" stroke-width="25"/><rect x="188" y="175" width="83" height="25" rx="6" fill="#f8ebbc"/><path d="M199 182l14 10 18-15" stroke="#77a879" stroke-width="4" fill="none"/>`,
+ `<ellipse cx="230" cy="204" rx="142" ry="29" fill="#c18c69"/><circle cx="92" cy="126" r="28" fill="#f0c5a5"/><path d="M91 153v49" stroke="#ad98c8" stroke-width="31"/><circle cx="365" cy="132" r="23" fill="#f0c5a5"/><path d="M365 157v44" stroke="#78b7a0" stroke-width="25"/><circle cx="214" cy="106" r="21" fill="#f0c5a5"/><path d="M214 127v53" stroke="#f0b66b" stroke-width="25"/><rect x="163" y="177" width="140" height="29" rx="8" fill="#fff9e7"/><text x="173" y="197" font-size="14" fill="#4d785f">手作／聊天／觀賞</text>`]
+ ];
+ const headings=[['通道有障礙物','保持通道暢通・尊重自主'],['閱讀一般菜單有困難','提供大字菜單・耐心等候'],['長者準備慢慢入座','尊重自行入座的意願'],['顧客聽不清楚套餐介紹','改用清楚的文字說明'],['顧客告知花生過敏','向廚房確認成分與風險'],['老幼一起參與活動','提供不同的自願參與方式']];
+ return `<div class="care-scene-label">🎬 情境 ${n+1}・${phase===0?'發現問題':'採取行動'}</div><svg class="care-scene-svg" viewBox="0 0 460 280" role="img" aria-label="${headings[n][phase]}"><defs><linearGradient id="careWall" x2="0" y2="1"><stop stop-color="#fef4df"/><stop offset="1" stop-color="#e3f2e6"/></linearGradient></defs><rect width="460" height="280" rx="22" fill="url(#careWall)"/><rect x="24" y="30" width="96" height="85" rx="12" fill="#c8e8ee" stroke="#e5c5a0" stroke-width="8"/><path d="M72 32v81M25 74h94" stroke="#e5c5a0" stroke-width="6"/><rect x="0" y="243" width="460" height="37" fill="#dfc5a6"/><path d="M0 243h460" stroke="#c49e80" stroke-width="5"/><circle cx="414" cy="45" r="15" fill="#f6d98a"/><path d="M414 60v24" stroke="#b7a377" stroke-width="4"/>${shapes[n][phase]}</svg><strong class="care-scene-heading">${headings[n][phase]}</strong>`;
+}
+
+function careMiniStart(n){
+ locked=true;const t=levels[3].tasks[n],c=careScenes[n];let phase=0,errors=0;
+ const draw=()=>{
+  const second=phase===1;
+  showModal(`<div class="care-lesson"><div class="care-visual">${careSituationArt(n,phase)}<p>${second?c.observe:c.intro}</p></div><div class="care-content"><p class="care-kicker">💚 第四關・友善共融餐廳｜任務 ${n+1}/6｜${second?'第二步：實際服務':'第一步：情境判斷'}</p><h2>${second?c.follow:t.question}</h2><div id="careChoices">${(second?c.opts:t.options).map((a,i)=>`<button class="choice" data-care="${i}">${['A','B','C'][i]}. ${a}</button>`).join('')}</div><p id="careFeedback" class="care-feedback" aria-live="polite"></p><button id="careExit" class="secondary">返回餐廳</button></div></div>`);
+  $('careExit').onclick=()=>{locked=false;$('overlay').classList.add('hidden')};
+  $('careChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+   const selected=+b.dataset.care,correct=second?c.a:t.correct;
+   if(selected!==correct){errors++;$('careFeedback').textContent='💡 再想想：尊重當事人意願、安全與清楚溝通，哪一個選擇更合適？';return}
+   $('careChoices').querySelectorAll('button').forEach(x=>x.disabled=true);
+   $('careFeedback').innerHTML=`✔ 做得好！${second?c.why:t.why}`;
+   const next=document.createElement('button');next.className='mini-primary';next.textContent=second?'🏅 完成服務・領取100分':'➡️ 下一步：現場服務';next.style.cssText='display:block;width:100%;margin-top:14px;padding:16px;font-size:18px';
+   next.onclick=()=>{if(!second){phase=1;draw()}else{answer(n,t.correct)}};
+   $('careFeedback').insertAdjacentElement('afterend',next);
+  });
+ };draw();
+}
+
+
+// V28: unmistakably different dining room (not recycling laboratory).
+function buildCareDistinctV28(){
+ const ivory=M(0xfff3df),rose=M(0xf4b8ba),sage=M(0x9ccfb1),wood=M(0xc78c62),gold=M(0xffd784),glass=new THREE.MeshStandardMaterial({color:0xc5f4f1,transparent:true,opacity:.55,roughness:.12});
+ scene.background=new THREE.Color(0xffe9d9);scene.fog=new THREE.Fog(0xffe9d9,32,64);
+ // Restaurant dining floor and a highly visible pastel welcome arch.
+ cube(0,-.012,0,21,.025,20,ivory);
+ for(let z=-8;z<=8;z+=2){cube(0,.012,z,2.8,.025,1.6,M(0xf1d7c0))}
+ for(const x of [-9.7,9.7]){cube(x,2.3,-1,.34,4.6,18,rose);for(const z of [-7,-3,1,5]){cube(x,2.25,z,.13,2.4,2.2,glass)}}
+ for(const x of [-2.8,2.8]){cube(x,2.3,-8.7,.34,4.6,.38,wood);ball(x,4.7,-8.7,.5,rose)}
+ cube(0,4.6,-8.7,6,.42,.4,rose);
+ decorationSign('🌸 花花友善共融餐廳 🌸',0,3.85,-8.35,5.5,'#fff1e9','#874d60');
+ decorationSign('歡迎入座・尊重自主・溫暖服務',0,2.75,-8.25,5.4,'#fff9df','#56705d');
+ // Clearly recognizable tables with tablecloths, plates, cups and food.
+ for(const [x,z] of [[-7.1,-5],[-7,1.6],[7,-5],[7,1.6]]){
+  cylinder(x,.74,z,1.15,.18,wood);cylinder(x,.88,z,1.23,.12,ivory);
+  for(const dx of [-.52,.52]){cylinder(x+dx,.96,z,.25,.055,glass);ball(x+dx,1.04,z,.10,gold)}
+  cylinder(x,1.06,z-.52,.13,.25,rose);
+  for(const dx of [-1.7,1.7]){cube(x+dx,.46,z,.7,.15,.7,sage);cube(x+dx,.95,z+.28,.7,.95,.13,wood)}
+ }
+ // A cheerful service counter and accessible open center aisle.
+ cube(-4,1.05,-7.6,3.5,1.2,1.0,wood);cube(-4,1.72,-7.6,3.8,.16,1.2,ivory);
+ decorationSign('🍽️ 服務櫃台',-4,2.45,-7.45,2.8,'#fff4df','#80583f');
+ decorationSign('♿ 無障礙通道',0,.3,4.2,2.6,'#e6f7e8','#327453');
+ // Flower arrangements, wall pictures, hanging heart-shaped decorations.
+ for(const x of [-8.9,8.9])for(const z of [-7,-3,1,5]){cylinder(x,.35,z,.26,.7,wood);ball(x,.84,z,.39,sage);ball(x-.18,1.13,z,.17,rose);ball(x+.18,1.13,z,.17,gold)}
+ for(const x of [-6,0,6]){cylinder(x,3.75,-1,.04,.5,wood);ball(x,3.45,-1,.32,gold)}
+ // Friendly hosts, with soft pastel uniforms, standing away from task markers.
+ for(const [x,z,c] of [[-2.5,-6.4,0xf0a1a7],[3.3,-6.4,0x8bcab4],[-8,6.5,0xe9c57f]]){
+  const g=storyCharacter(c,false,true);g.position.set(x,0,z);scene.add(g);g.rotation.y=Math.PI/5;
+ }
+}
+
+
+// V30: fourth-level fairy-tale restaurant. All scenery is actual 3D geometry.
+function buildCareFairytaleV30(){
+ const mat=c=>new THREE.MeshStandardMaterial({color:c,roughness:.72});
+ const pink=mat(0xffb8cc),petal=mat(0xff85ac),cream=mat(0xffefce),mint=mat(0x8fdac0),leaf=mat(0x57a879),wood=mat(0xb67b57),gold=mat(0xffd77c),sky=mat(0xb7e8fb),white=mat(0xffffff);
+ const grp=new THREE.Group();scene.add(grp);
+ const add=(geo,m,x,y,z)=>{const o=new THREE.Mesh(geo,m);o.position.set(x,y,z);grp.add(o);return o};
+ const block=(x,y,z,w,h,d,m)=>add(new THREE.BoxGeometry(w,h,d),m,x,y,z);
+ const orb=(x,y,z,r,m)=>add(new THREE.SphereGeometry(r,12,9),m,x,y,z);
+ const cone=(x,y,z,r,h,m)=>add(new THREE.ConeGeometry(r,h,5),m,x,y,z);
+ // A playful restaurant frontage: candy-striped awnings and peaked roofs.
+ for(const [x,z] of [[-7.3,-8.4],[7.3,-8.4]]){
+  block(x,3.5,z,4.4,2.2,.45,cream);
+  const roof=cone(x,5.1,z,3.3,1.65,pink);roof.rotation.y=Math.PI/4;
+  for(let k=-2;k<=2;k++){block(x+k*.72,2.55,z+.32,.63,.7,.12,k%2?pink:white)}
+  block(x,3.85,z+.31,2.4,1.25,.09,sky);
+  for(let k=-1;k<=1;k++){block(x+k*.8,3.85,z+.42,.07,1.2,.08,white)}
+ }
+ // Arched central entrance with a flower crown.
+ for(const x of [-3.25,3.25])block(x,3.0,-8.6,.58,4.2,.7,wood);
+ block(0,5.2,-8.6,7.2,.58,.75,wood);
+ for(let k=0;k<13;k++){
+  const x=-3.2+k*.53;orb(x,5.53+Math.sin(k*.6)*.15,-8.15,.21,k%3===0?gold:k%2?petal:mint);
+ }
+ // Fairy-tale cobblestone walk and pink floral central emblem.
+ for(let row=0;row<9;row++)for(let col=-2;col<=2;col++){
+  const o=block(col*.58+(row%2)*.24,.028,-6.1+row*1.7,.49,.045,1.36,(row+col)%3===0?cream:(row+col)%2?mint:white);
+  o.rotation.y=(row+col)%2?.035:-.035;
+ }
+ const circle=(x,y,z,r,m)=>{const o=add(new THREE.CylinderGeometry(r,r,.04,24),m,x,y,z);return o};
+ circle(0,.063,4.9,1.25,pink);circle(0,.088,4.9,.74,cream);
+ for(let i=0;i<8;i++){const a=i*Math.PI/4;circle(Math.cos(a)*.92,.095,4.9+Math.sin(a)*.92,.33,petal)}
+ // Six distinct, recognizable service stations, with a color-coded base.
+ const stations=[[-6.4,3.4,0x86d5f6,'access'],[-5.7,-2.5,0xffd68c,'menu'],[2.1,-3.0,0xffb9c8,'help'],[-7.0,6.0,0xa4e1c1,'talk'],[6.3,-4.8,0xe1c4ff,'food'],[0.8,6.8,0xffd68c,'together']];
+ stations.forEach(([x,z,color,type],idx)=>{
+  const m=mat(color);circle(x,.06,z,1.05,m);
+  for(let i=0;i<8;i++){const a=i*Math.PI/4;orb(x+Math.cos(a)*1.03,.13,z+Math.sin(a)*1.03,.12,i%2?white:gold)}
+  if(type==='access'){
+   block(x,.22,z,1.2,.12,.9,cream);orb(x-.38,.8,z,.27,mint);circle(x+.4,.23,z,.28,wood);
+  }else if(type==='menu'){
+   block(x,.7,z,.85,1.2,.12,wood);block(x,.77,z+.08,.65,.92,.07,cream);
+   for(let i=0;i<4;i++)block(x,.99-i*.16,z+.13,.4,.035,.025,mint);
+  }else if(type==='help'){
+   block(x,.65,z,1.15,.15,.8,wood);orb(x-.3,1.0,z,.22,pink);orb(x+.3,1.0,z,.22,cream);
+  }else if(type==='talk'){
+   block(x,.6,z,.9,1.0,.15,wood);orb(x-.35,1.28,z,.24,mint);orb(x+.32,1.28,z,.24,gold);
+  }else if(type==='food'){
+   block(x,.7,z,1.2,.18,.9,wood);circle(x,.84,z,.34,white);orb(x,.96,z,.16,leaf);orb(x+.3,.95,z,.1,petal);
+  }else{
+   circle(x,.75,z,.73,wood);orb(x-.55,1.03,z,.22,pink);orb(x+.52,1.03,z,.19,mint);orb(x,1.01,z-.4,.16,gold);
+  }
+ });
+ // Flower boxes and climbing vines at the sides; clear middle walkway.
+ for(const side of [-1,1])for(let k=0;k<8;k++){
+  const x=side*9.0,z=-7.3+k*2.0;
+  add(new THREE.CylinderGeometry(.32,.24,.44,9),wood,x,.24,z);
+  orb(x,.63,z,.33,leaf);
+  for(let j=0;j<5;j++){const a=j*1.256;orb(x+Math.cos(a)*.26,.93+Math.sin(a)*.10,z+Math.sin(a)*.23,.15,j%2?pink:gold)}
+ }
+ // Strings of colorful bunting above the dining area.
+ for(let z of [-5,-.7,3.7])for(let k=0;k<13;k++){
+  const x=-8.5+k*1.42;
+  const flag=cone(x,3.72+Math.sin(k*.55)*.15,z,.28,.55,[petal,mint,gold,sky][k%4]);flag.rotation.z=Math.PI;
+ }
+ // Warm suspended glowing bulbs and floating decorative hearts.
+ const lampMat=new THREE.MeshStandardMaterial({color:0xffe4a0,emissive:0xffc65e,emissiveIntensity:.55});
+ for(const x of [-6,-2,2,6])for(const z of [-5,2]){
+  block(x,3.8,z,.045,.8,.045,wood);orb(x,3.35,z,.21,lampMat);
+ }
+ // Cute stationary mascot animals near the sides.
+ function mascot(x,z,body,ear){
+  orb(x,.69,z,.52,body);orb(x,1.33,z,.41,body);
+  for(const dx of [-.3,.3]){const e=orb(x+dx,1.74,z,.19,ear);e.scale.set(.72,1.6,.7)}
+  for(const dx of [-.16,.16])orb(x+dx,1.4,z+.37,.055,wood);
+  orb(x,1.24,z+.40,.075,petal);
+  for(const dx of [-.28,.28])orb(x+dx,.29,z+.22,.18,body);
+ }
+ mascot(-8.0,7.7,white,pink);mascot(8.0,7.7,cream,gold);
+ // Place a distinctive giant flower over the central entry.
+ orb(0,5.95,-8.1,.25,gold);
+ for(let i=0;i<7;i++){const a=i*Math.PI*2/7;orb(Math.cos(a)*.4,5.95+Math.sin(a)*.4,-8.1,.24,petal)}
+}
+
+function startLevel(i){level=i;done=Array(levels[i].tasks.length).fill(false);levelScore=0;locked=false;resetWorld();if(i===0){buildAssetMarket();enrichStorybookV8();buildV10Art()}else if(i===1){buildAssetKitchen()}else if(i===2){buildRecyclingV15()}else{builders[i]();enhancements[i]();makePolishedScene(i)}if(i===3){buildCareV27();buildCareDistinctV28();buildCareFairytaleV30();}createPlayer();markers=levels[i].tasks.map((t,j)=>taskMarker(...t.pos,j));$('sceneTitle').textContent=i===0?'🥕 童話小農市集 V10':i===1?'🍲 惜食永續廚房 V14':i===2?'♻️ 餐旅資源循環實驗室 V26':'💚 友善共融餐廳｜繽紛童話3D場景';$('badge').classList.add('hidden');$('badge').innerHTML='';$('toast').textContent=i===0?'走近街道旁的小型金色星星任務牌，再點「執行任務」；電腦按 E。':i===1?'🧊 冰箱順序 → 🍽️ 份量調整 → ♻️ 分類挑戰：靠近任務點後按「執行任務」。':i===2?'📷 六大工作站：觀察對應情境圖、作出餐旅決策、理解原因並完成挑戰。':'💚 六項友善服務任務：先判斷情境，再進行實際服務決策。靠近任務點按 E 或執行任務。';if(i===0)updateMarketLoading();if(i===1)updateKitchenLoading();$('overlay').classList.add('hidden');camera.position.set(0,i===0?3.6:i===1?2.95:i===2?5:10,i===0?14:i===1?10:i===2?12:17);camera.lookAt(0,1,-3);updatePanel()}
+function showModal(html){$('modal').innerHTML=html;$('overlay').classList.remove('hidden')}
+function menu(){locked=false;level=-1;resetWorld();base(0xc8e4d2,0x8eba84);for(let i=0;i<4;i++){const x=-7+i*4.6;cube(x,1,-2,3,2,3,[colors.green,colors.gold,colors.blue,colors.red][i]);ball(x,2.5,-2,.8,colors.white)}$('sceneTitle').textContent='四大實驗室';$('assetStatus').textContent='';$('sideTitle').textContent='請選擇關卡';$('mission').textContent='四種不同場景、四種永續實踐';$('toast').textContent='四關已開放，可自由選擇關卡；也可依序完成四關。';$('badge').classList.add('hidden');showModal(`<h2>🌱 花花餐旅3D永續創新實驗室</h2><p>透過四種場景學習永續餐旅與友善服務。四關已全部開放，可自由選擇，或從第一關依序挑戰；第三關與第四關各有六項教育任務。</p><div class="cards">${levels.map((l,i)=>`<div class="card"><strong>${l.icon} 第${i+1}關｜${l.name}</strong><p>${l.intro}</p><button data-start="${i}" ${unlocked.has(i)?'':'disabled'}>${unlocked.has(i)?'開始挑戰':'🔒 完成前一關解鎖'}</button></div>`).join('')}</div><p class="muted">電腦：WASD／方向鍵移動、E互動；手機／平板可用畫面方向鍵。</p>`);$('modal').querySelectorAll('[data-start]').forEach(b=>b.onclick=()=>startLevel(+b.dataset.start))}
+// V12: three distinct interactive kitchen mini-games, sharing the original score and badge system.
+let kitchenMiniState=null;
+function miniNotice(msg,good=false){const el=$('miniFeedback');if(el){el.textContent=msg;el.style.color=good?'#28764c':'#a6532c'}}
+function kitchenMiniStart(n){
+ locked=true;
+ if(n===0){
+  kitchenMiniState={n,step:0};
+  showModal(`<h2>🧊 冰箱保鮮任務</h2><p>剛收到一批需要冷藏的食材，請依正確順序完成三個步驟。</p><div class="mini-stage"><div class="mini-sticker">🥬 🥕 🧊</div><p class="mini-hint">依序點選：確認保存需求 → 標示日期 → 盡快冷藏並先進先出</p><div class="mini-grid" id="miniChoices"><button class="mini-tile" data-step="2">❄️ 放入適當冷藏區並先進先出</button><button class="mini-tile" data-step="0">🔎 確認食材保存需求</button><button class="mini-tile" data-step="1">🏷️ 標示進貨與保存日期</button><button class="mini-tile" data-step="9">☀️ 先放室溫兩天</button></div><p class="mini-progress" id="miniProgress">已完成 0／3 步</p><p class="mini-feedback" id="miniFeedback" aria-live="polite"></p></div><button class="secondary mini-back" id="miniExit">返回廚房</button>`);
+  $('miniChoices').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+   if(+b.dataset.step!==kitchenMiniState.step){miniNotice('再想想：先確認保存條件，再標日期，最後冷藏。');return}
+   b.disabled=true;b.textContent='✓ '+b.textContent;kitchenMiniState.step++;
+   $('miniProgress').textContent='已完成 '+kitchenMiniState.step+'／3 步';miniNotice('做得好！',true);
+   if(kitchenMiniState.step===3){$('miniChoices').querySelectorAll('button').forEach(x=>x.disabled=true);miniNotice('三個步驟完成！食材已妥善保存。',true);miniFinishButton(n)}
+  });
+ }else if(n===1){
+  kitchenMiniState={n,portion:3};
+  showModal(`<h2>🍽️ 適量備餐挑戰</h2><p>一位客人表示食量較小，希望能選擇適合自己的份量。請調整餐點份量。</p><div class="mini-stage"><div class="mini-sticker" id="plateIcon">🍚 🍚 🍚</div><p>目前準備 <span class="mini-number" id="portionNum">3</span> 份小份量餐點</p><input class="mini-meter" id="portionRange" type="range" min="1" max="5" value="3" step="1" aria-label="備餐份量"><p class="mini-hint">本次顧客選擇 2 份小份量餐點。尊重顧客選擇，避免多做造成浪費。</p><p class="mini-feedback" id="miniFeedback" aria-live="polite"></p><button class="mini-primary" id="portionSubmit">🍽️ 確認出餐份量</button></div><button class="secondary mini-back" id="miniExit">返回廚房</button>`);
+  $('portionRange').oninput=()=>{const v=+$('portionRange').value;kitchenMiniState.portion=v;$('portionNum').textContent=v;$('plateIcon').textContent=Array(v).fill('🍚').join(' ');miniNotice('')};
+  $('portionSubmit').onclick=()=>{if(kitchenMiniState.portion!==2){miniNotice('客人選擇的是 2 份，請依需求調整份量。');return}miniNotice('份量剛好！尊重客人需求，也減少食物浪費。',true);$('portionSubmit').disabled=true;$('portionRange').disabled=true;miniFinishButton(n)};
+ }else{
+  kitchenMiniState={n,index:0,correct:0};
+  showModal(`<h2>♻️ 廚房分類小達人</h2><p>依序把四種廚房物品放進適合的分類區。請依當地回收及廚餘處理規定執行。</p><div class="mini-stage"><div class="mini-sticker" id="sortItem">🥬</div><h3 id="sortName">乾淨蔬菜葉</h3><p class="mini-progress" id="miniProgress">第 1／4 件</p><div class="mini-grid"><button class="mini-tile" data-bin="food">🌱 廚餘（依場域規定）</button><button class="mini-tile" data-bin="recycle">♻️ 資源回收</button><button class="mini-tile" data-bin="trash">🗑️ 一般垃圾</button><button class="mini-tile" data-bin="sink">🚰 倒入水槽</button></div><p class="mini-feedback" id="miniFeedback" aria-live="polite"></p></div><button class="secondary mini-back" id="miniExit">返回廚房</button>`);
+  const items=[['🥬','乾淨蔬菜葉（場域允許回收為廚餘）','food'],['🥫','已清空的可回收金屬罐','recycle'],['🧻','沾油污且不可回收的紙巾','trash'],['🍌','香蕉皮（場域允許回收為廚餘）','food']];
+  $('modal').querySelectorAll('[data-bin]').forEach(b=>b.onclick=()=>{
+   const item=items[kitchenMiniState.index];if(b.dataset.bin!==item[2]){miniNotice('分類不正確，請依材質及場域規範再試一次。');return}
+   kitchenMiniState.index++;if(kitchenMiniState.index===items.length){miniNotice('四件物品全部分類成功！',true);$('modal').querySelectorAll('[data-bin]').forEach(x=>x.disabled=true);miniFinishButton(n);return}
+   const next=items[kitchenMiniState.index];$('sortItem').textContent=next[0];$('sortName').textContent=next[1];$('miniProgress').textContent='第 '+(kitchenMiniState.index+1)+'／4 件';miniNotice('上一件分類正確！',true);
+  });
+ }
+ $('miniExit').onclick=()=>{locked=false;$('overlay').classList.add('hidden')};
+}
+function miniFinishButton(n){
+ const b=document.createElement('button');b.className='mini-primary';b.textContent='✨ 完成挑戰・領取 100 分';b.onclick=()=>{kitchenMiniState=null;answer(n,levels[1].tasks[n].correct)};
+ $('miniFeedback').insertAdjacentElement('afterend',b);
+}
+function interact(){if(level<0||locked)return;let n=-1,d=2.1;for(let i=0;i<markers.length;i++){if(done[i])continue;const q=player.position.distanceTo(markers[i].position);if(q<d){n=i;d=q}}if(n<0){$('toast').textContent='請再靠近發光任務點，手機點「執行任務」即可。';return}if(level===1){kitchenMiniStart(n);return}if(level===2){recycleMiniStart(n);return}if(level===3){careMiniStart(n);return}locked=true;const t=levels[level].tasks[n];showModal(`<h2>💡 ${t.name}</h2><p>${t.question}</p><div id="choices">${t.options.map((a,j)=>`<button class="choice" data-answer="${j}">${['A','B','C'][j]}. ${a}</button>`).join('')}</div><p id="feedback" class="muted"></p><button id="closeQuestion" class="secondary">先返回場景</button>`);$('modal').querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>answer(n,+b.dataset.answer));$('closeQuestion').onclick=()=>{locked=false;$('overlay').classList.add('hidden')}}
+function answer(n,choice){const t=levels[level].tasks[n];if(choice!==t.correct){$('feedback').textContent='再想想看：這個選擇還不夠符合永續或友善服務原則，可以重新選擇。';$('feedback').style.color='#b4532c';return}done[n]=true;levelScore+=100;total+=100;markers[n].visible=false;updatePanel();$('toast').textContent='✔ '+t.name+'，獲得100分！';if(done.every(Boolean)){unlocked.add(Math.min(level+1,3));$('badge').classList.remove('hidden');$('badge').innerHTML=`🏅 <b>${levels[level].badge}</b><p>本關完成，獲得 ${levelScore} 分！</p>`;showModal(`<h2>🎉 第${level+1}關挑戰成功！</h2><div class="badge">🏅 <strong>${levels[level].badge}</strong></div><p>${t.why}</p><p>本關 ${levelScore} 分｜累積 ${total} 分</p><button id="next">${level<3?'進入下一關':'查看四關成果'}</button><button id="backMenu" class="secondary">返回關卡選單</button>`);$('next').onclick=()=>level<3?startLevel(level+1):finish();$('backMenu').onclick=menu;locked=false}else{showModal(`<h2>✨ 答對了！+100 分</h2><p>${t.why}</p><button id="continue">繼續探索</button>`);$('continue').onclick=()=>{locked=false;$('overlay').classList.add('hidden')}}}
+function finish(){showModal(`<h2>🏆 四大永續實驗室全數完成！</h2><p style="font-size:35px">🥕 🍲 ♻️ 💚</p><p>你已完成綠色採購、惜食廚房、資源分類及友善服務四大挑戰。</p><div class="badge"><h3>永續餐旅關懷大使</h3><p>環境永續 × 尊重自主 × 友善共融</p><strong>本次累積得分：${total} 分</strong></div><p class="muted">把永續理念帶進餐旅現場，讓每個人都能被尊重與照顧。</p><button id="again">重新挑戰</button><button id="backMenu" class="secondary">關卡選單</button>`);$('again').onclick=()=>{total=0;unlocked.clear();[0,1,2,3].forEach(i=>unlocked.add(i));startLevel(0)};$('backMenu').onclick=menu}
+$('action').onclick=interact;$('mobileAction').onclick=interact;$('menu').onclick=menu;window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(k))e.preventDefault();keys[k]=true;if(k==='e'&&!e.repeat)interact()});window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);window.addEventListener('blur',()=>keys={});document.querySelectorAll('[data-key]').forEach(b=>{const k=b.dataset.key;b.addEventListener('pointerdown',e=>{e.preventDefault();keys[k]=true;b.setPointerCapture(e.pointerId)});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>keys[k]=false)});
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}new ResizeObserver(resize).observe(canvas);resize();const clock=new THREE.Clock();function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.05);elapsed+=dt;if(player&&level>=0&&!locked&&$('overlay').classList.contains('hidden')){let x=Number(!!(keys.d||keys.arrowright))-Number(!!(keys.a||keys.arrowleft)),z=Number(!!(keys.s||keys.arrowdown))-Number(!!(keys.w||keys.arrowup));if(x||z){const n=Math.hypot(x,z);player.position.x=THREE.MathUtils.clamp(player.position.x+x/n*dt*5,-9.5,9.5);player.position.z=THREE.MathUtils.clamp(player.position.z+z/n*dt*5,-9.5,9.5);player.rotation.y=Math.atan2(x,z)}if(level===0){camera.position.lerp(new THREE.Vector3(player.position.x,3.45,player.position.z+5.5),.09);camera.lookAt(player.position.x,1.55,player.position.z-5)}else{camera.position.lerp(new THREE.Vector3(player.position.x,level===1?2.85:level===2?5:10,player.position.z+(level===1?4.5:level===2?7:12)),.075);camera.lookAt(player.position.x,level===1?1.7:level===2?1.2:0,player.position.z-(level===1?4.1:level===2?4:1))}markers.forEach((g,i)=>{if(!done[i]){g.position.y=Math.sin(elapsed*2+i)*.045;if(g.userData.star)g.userData.star.rotation.y+=dt*.9}})}animatePolish(elapsed);animateV14(elapsed);animateRecycleV15(elapsed);for(const p of marketAnimated){p.g.rotation.y=Math.sin(elapsed*.75+p.x)*.075}renderer.render(scene,camera)}menu();animate();
+</script></body></html>
